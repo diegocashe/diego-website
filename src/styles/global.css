@@ -210,6 +210,29 @@ section {
 .logo-chip .badge .dot {
   color: var(--blue);
 }
+/* ── Brand tile (stacked avatar) ── */
+.brand-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  background: var(--ink);
+  color: #fff;
+  flex: none;
+  box-sizing: border-box;
+}
+.brand-tile.blue {
+  background: var(--blue);
+}
+.brand-tile.soft {
+  background: var(--tint);
+  color: var(--ink);
+}
+.brand-tile .wm {
+  line-height: 0.94;
+}
+
 .mono {
   background: var(--ink);
   color: #fff;
