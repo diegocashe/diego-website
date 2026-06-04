@@ -1,0 +1,394 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Wordmark UI Kit · Diego Castillo">
+  <div class="wrap">
+
+    <div class="pagehead">
+      <div>
+        <div class="eyebrow">Sistema · diego castillo.</div>
+        <h1>Wordmark UI Kit</h1>
+      </div>
+      <p>Componentes web con el ADN del logotipo: Manrope, minúsculas, tinta + azul y el <b style="color:var(--blue)">punto</b> como acento recurrente.</p>
+    </div>
+
+    <!-- 01 · LOGO VARIATIONS -->
+    <section>
+      <div class="sec-head"><span class="n">01</span><h2>Variaciones del logo</h2><div class="rule"></div></div>
+      <div class="grid3">
+        <div class="panel pad">
+          <div class="tag-lab">Apilado</div>
+          <div class="logo-cell">
+            <div class="wm stack" style="font-size:30px;">
+              <span>diego</span>
+              <span>castillo<span class="dot">.</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">En línea + rol</div>
+          <div class="logo-cell">
+            <div style="text-align:center;">
+              <div class="wm inline" style="font-size:26px;">diego castillo<span class="dot">.</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--ink-3);text-transform:uppercase;margin-top:9px;">Programador</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Reverso</div>
+          <div class="logo-cell dark">
+            <div class="wm inline rev" style="font-size:26px;">diego castillo<span class="dot">.</span></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Sobre azul</div>
+          <div class="logo-cell blue">
+            <div class="wm inline rev" style="font-size:26px;">diego castillo<span class="dot" style="color:#fff">.</span></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Monograma / favicon</div>
+          <div class="logo-cell" style="display:flex;flex-direction:column;gap:20px;">
+            <div class="fav-sizes">
+              <div>
+                <div class="mono" style="width:60px;height:60px;border-radius:15px;font-size:25px;">dc<span class="dot">.</span></div>
+                <div class="lbl">64</div>
+              </div>
+              <div>
+                <div class="mono" style="width:40px;height:40px;border-radius:10px;font-size:17px;">dc<span class="dot">.</span></div>
+                <div class="lbl">40</div>
+              </div>
+              <div>
+                <div class="mono" style="width:28px;height:28px;border-radius:7px;font-size:12px;">dc<span class="dot">.</span></div>
+                <div class="lbl">28</div>
+              </div>
+            </div>
+            <div class="fav-tab">
+              <div class="mono fv" style="font-size:8px;">dc<span class="dot">.</span></div>
+              <span class="t">diego castillo<span style="color:var(--blue)">.</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Chip de marca</div>
+          <div class="logo-cell">
+            <div class="logo-chip">
+              <span class="badge">dc<span class="dot">.</span></span>
+              <div class="wm inline" style="font-size:19px;">diego castillo<span class="dot">.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · TOKENS -->
+    <section>
+      <div class="sec-head"><span class="n">02</span><h2>Tokens</h2><div class="rule"></div></div>
+      <div class="grid2">
+        <div class="panel pad">
+          <div class="tag-lab">Color</div>
+          <div class="swatches">
+            <div class="sw"><div class="chip" style="background:#14181f"></div><div class="meta"><b>Ink</b><code>#14181F</code></div></div>
+            <div class="sw"><div class="chip" style="background:#565f6e"></div><div class="meta"><b>Ink 2</b><code>#565F6E</code></div></div>
+            <div class="sw"><div class="chip" style="background:#2d6cff"></div><div class="meta"><b>Blue</b><code>#2D6CFF</code></div></div>
+            <div class="sw"><div class="chip" style="background:#1f4fd6"></div><div class="meta"><b>Blue D</b><code>#1F4FD6</code></div></div>
+            <div class="sw"><div class="chip" style="background:#e9f0ff"></div><div class="meta"><b>Tint</b><code>#E9F0FF</code></div></div>
+            <div class="sw"><div class="chip" style="background:#eceef1;border-right:1px solid var(--line)"></div><div class="meta"><b>BG</b><code>#ECEEF1</code></div></div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Tipografía · Space Grotesk · Manrope · JetBrains Mono</div>
+          <div>
+            <div class="type-row">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.03em;">Display</span>
+              <span class="spec">Space Grotesk · 700</span>
+            </div>
+            <div class="type-row">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;letter-spacing:-.02em;">Encabezado</span>
+              <span class="spec">Space Grotesk · 600</span>
+            </div>
+            <div class="type-row">
+              <span style="font-size:14px;font-weight:500;">Cuerpo / UI · Manrope</span>
+              <span class="spec">Manrope · 500</span>
+            </div>
+            <div class="type-row">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)">Etiqueta mono</span>
+              <span class="spec">JetBrains Mono · 11</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · BUTTONS -->
+    <section>
+      <div class="sec-head"><span class="n">03</span><h2>Botones</h2><div class="rule"></div></div>
+      <div class="panel pad">
+        <div class="tag-lab">Variantes</div>
+        <div class="row" style="margin-bottom:22px;">
+          <button class="btn btn-ink">Ver proyectos <span class="arr">→</span></button>
+          <button class="btn btn-blue">Contratar</button>
+          <button class="btn btn-out">Descargar CV</button>
+          <button class="btn btn-ghost">Cancelar</button>
+          <button class="btn btn-blue" disabled>Enviado</button>
+        </div>
+        <div class="tag-lab">Tamaños</div>
+        <div class="row">
+          <button class="btn btn-ink btn-sm">Pequeño</button>
+          <button class="btn btn-ink">Mediano</button>
+          <button class="btn btn-ink btn-lg">Grande <span class="arr">→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · FORMS -->
+    <section>
+      <div class="sec-head"><span class="n">04</span><h2>Campos de formulario</h2><div class="rule"></div></div>
+      <div class="panel pad">
+        <div class="grid3">
+          <div class="field">
+            <label>Nombre</label>
+            <input class="input" placeholder="Tu nombre" value="Diego Castillo" />
+          </div>
+          <div class="field">
+            <label>Correo</label>
+            <div class="input-icon"><span class="ic">@</span><input class="input" placeholder="hola@correo.dev" /></div>
+          </div>
+          <div class="field">
+            <label>Servicio</label>
+            <select class="input">
+              <option>Desarrollo web</option>
+              <option>Consultoría</option>
+              <option>Mantenimiento</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Buscar</label>
+            <div class="input-icon"><span class="ic">⌕</span><input class="input" placeholder="Buscar proyecto…" /></div>
+          </div>
+          <div class="field">
+            <label>Presupuesto</label>
+            <input class="input err" value="abc" />
+            <span class="hint err">Ingresa un monto válido.</span>
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input class="input" placeholder="+52 ·· ···· ····" />
+            <span class="hint">Opcional.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · BADGES + CONTROLS -->
+    <section>
+      <div class="sec-head"><span class="n">05</span><h2>Badges &amp; controles</h2><div class="rule"></div></div>
+      <div class="grid2">
+        <div class="panel pad">
+          <div class="tag-lab">Badges / estados</div>
+          <div class="row" style="margin-bottom:18px;">
+            <span class="badge-pill bp-blue"><span class="d"></span>En curso</span>
+            <span class="badge-pill bp-ok"><span class="d"></span>Entregado</span>
+            <span class="badge-pill bp-warn"><span class="d"></span>En revisión</span>
+            <span class="badge-pill bp-gray"><span class="d"></span>Pausado</span>
+            <span class="badge-pill badge-ink">Nuevo</span>
+          </div>
+          <div class="tag-lab">Tags técnicos</div>
+          <div class="row">
+            <span class="tag">React</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Node</span>
+            <span class="tag">PostgreSQL</span>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Toggles, checks, radios</div>
+          <div class="stack-v">
+            <div class="row" style="gap:28px;">
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="track"></span>Disponible para proyectos
+              </label>
+            </div>
+            <div class="row" style="gap:28px;">
+              <label class="check">
+                <input type="checkbox" checked />
+                <span class="box">
+                  <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>Términos
+              </label>
+              <label class="check">
+                <input type="checkbox" />
+                <span class="box">
+                  <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>Newsletter
+              </label>
+            </div>
+            <div class="row" style="gap:28px;">
+              <label class="radio"><input type="radio" name="plan" checked /><span class="dot-r"></span>Mensual</label>
+              <label class="radio"><input type="radio" name="plan" /><span class="dot-r"></span>Anual</label>
+            </div>
+            <div class="seg" id="seg">
+              <button class="on">Diseño</button>
+              <button>Código</button>
+              <button>Deploy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · NAVIGATION -->
+    <section>
+      <div class="sec-head"><span class="n">06</span><h2>Navegación</h2><div class="rule"></div></div>
+      <div class="panel pad">
+        <div class="between" style="padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px;">
+          <div class="logo-chip">
+            <span class="badge">dc<span class="dot">.</span></span>
+            <div class="wm inline" style="font-size:18px;">diego castillo<span class="dot">.</span></div>
+          </div>
+          <div class="row" style="gap:22px;font-size:13.5px;font-weight:700;color:var(--ink-2);white-space:nowrap;">
+            <span style="color:var(--ink)">Trabajo</span>
+            <span>Sobre mí</span>
+            <span>Blog</span>
+            <button class="btn btn-ink btn-sm">Contacto</button>
+          </div>
+        </div>
+        <div class="tabs" id="tabs" style="margin-bottom:18px;">
+          <button class="on"><span class="d"></span>Resumen</button>
+          <button>Proyectos</button>
+          <button>Experiencia</button>
+          <button>Contacto</button>
+        </div>
+        <div class="breadcrumb">
+          <a>Inicio</a><span class="sep">/</span><a>Proyectos</a><span class="sep">/</span><a class="on">Plataforma fintech</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 · CARDS -->
+    <section>
+      <div class="sec-head"><span class="n">07</span><h2>Cards</h2><div class="rule"></div></div>
+      <div class="grid3" style="margin-bottom:22px;">
+        <div class="pcard">
+          <div class="cover">
+            <div class="wmx wm inline rev" style="font-size:16px;">diego castillo<span class="dot" style="color:#fff">.</span></div>
+          </div>
+          <div class="c-body">
+            <span class="badge-pill bp-ok" style="margin-bottom:10px;"><span class="d"></span>Entregado</span>
+            <h3>Plataforma fintech</h3>
+            <p>Dashboard de pagos en tiempo real con React y Node.</p>
+            <button class="btn btn-out btn-sm">Ver caso →</button>
+          </div>
+        </div>
+        <div class="stat">
+          <div class="k">Proyectos</div>
+          <div class="v">48<span class="dot">.</span></div>
+          <div class="delta">▲ 12 este año</div>
+        </div>
+        <div class="stat">
+          <div class="k">Satisfacción</div>
+          <div class="v">99%</div>
+          <div class="delta">▲ clientes recurrentes</div>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="price">
+          <div class="pname">Básico</div>
+          <div class="amt">$0<span>/mes</span></div>
+          <ul>
+            <li><span class="ck">✓</span>Landing de 1 página</li>
+            <li><span class="ck">✓</span>Diseño responsivo</li>
+            <li><span class="ck">✓</span>1 revisión</li>
+          </ul>
+          <button class="btn btn-out" style="width:100%;justify-content:center;">Empezar</button>
+        </div>
+        <div class="price feat">
+          <div class="ribbon"><span class="badge-pill badge-ink">Popular</span></div>
+          <div class="pname">Pro</div>
+          <div class="amt">$890<span>/proyecto</span></div>
+          <ul>
+            <li><span class="ck">✓</span>Web completa</li>
+            <li><span class="ck">✓</span>CMS + animaciones</li>
+            <li><span class="ck">✓</span>Revisiones ilimitadas</li>
+          </ul>
+          <button class="btn btn-ink" style="width:100%;justify-content:center;">Elegir Pro</button>
+        </div>
+        <div class="price">
+          <div class="pname">Equipo</div>
+          <div class="amt">Custom</div>
+          <ul>
+            <li><span class="ck">✓</span>Producto a medida</li>
+            <li><span class="ck">✓</span>Soporte dedicado</li>
+            <li><span class="ck">✓</span>SLA</li>
+          </ul>
+          <button class="btn btn-out" style="width:100%;justify-content:center;">Hablemos</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · FEEDBACK + LISTS -->
+    <section>
+      <div class="sec-head"><span class="n">08</span><h2>Feedback &amp; listas</h2><div class="rule"></div></div>
+      <div class="grid2">
+        <div class="panel pad">
+          <div class="tag-lab">Alertas</div>
+          <div class="stack-v">
+            <div class="alert al-blue">
+              <div class="ai">i</div>
+              <div><div class="at">Deploy en progreso</div><div class="ad">Tu sitio estará en línea en ~2 minutos.</div></div>
+            </div>
+            <div class="alert al-ok">
+              <div class="ai">✓</div>
+              <div><div class="at">Mensaje enviado</div><div class="ad">Diego te responderá en menos de 24 h.</div></div>
+            </div>
+            <div class="alert al-warn">
+              <div class="ai">!</div>
+              <div><div class="at">Dominio por expirar</div><div class="ad">Renueva antes del 30 de junio.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel pad">
+          <div class="tag-lab">Item de lista / avatar</div>
+          <div>
+            <div class="litem">
+              <div class="ava">DC<span class="on"></span></div>
+              <div style="flex:1"><div class="nm">Diego Castillo</div><div class="sub">Programador · en línea</div></div>
+              <span class="badge-pill bp-blue"><span class="d"></span>Tú</span>
+            </div>
+            <div class="litem">
+              <div class="ava" style="background:var(--blue)">MR</div>
+              <div style="flex:1"><div class="nm">María Ríos</div><div class="sub">Diseñadora</div></div>
+              <button class="btn btn-out btn-sm">Mensaje</button>
+            </div>
+            <div class="litem">
+              <div class="ava" style="background:#3a4250">JL</div>
+              <div style="flex:1"><div class="nm">Juan López</div><div class="sub">PM · ausente</div></div>
+              <button class="btn btn-ghost btn-sm">Ver</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Wordmark UI Kit · Manrope + tinta + azul · el punto como acento.</div>
+
+  </div>
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('#seg button').forEach((b) => {
+    b.addEventListener('click', function (this: HTMLButtonElement) {
+      this.parentElement?.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+      this.classList.add('on');
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('#tabs button').forEach((b) => {
+    b.addEventListener('click', function (this: HTMLButtonElement) {
+      this.parentElement?.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+      this.classList.add('on');
+    });
+  });
+</script>
