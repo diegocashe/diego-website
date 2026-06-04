@@ -3,8 +3,9 @@ import '../styles/global.css';
 
 interface Props {
   title?: string;
+  bodyClass?: string;
 }
-const { title = 'Diego Castillo' } = Astro.props;
+const { title = 'Diego Castillo', bodyClass } = Astro.props;
 ---
 
 <!doctype html>
@@ -23,7 +24,7 @@ const { title = 'Diego Castillo' } = Astro.props;
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class={bodyClass}>
     <slot />
   </body>
 </html>

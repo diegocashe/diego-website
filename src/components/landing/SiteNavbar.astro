@@ -1,0 +1,97 @@
+---
+import Button from '../ds/atoms/Button.astro';
+---
+
+<header class="navbar">
+  <div class="inner">
+    <a href="/" class="logo-chip" aria-label="diego castillo. — inicio">
+      <div class="brand-tile">
+        <div class="wm stack rev" style="font-size:7px;">
+          <span>diego</span>
+          <span>castillo<span class="dot">.</span></span>
+        </div>
+      </div>
+      <div class="wm inline" style="font-size:18px;">diego castillo<span class="dot">.</span></div>
+    </a>
+
+    <nav aria-label="Principal">
+      <a href="#trabajo">Trabajo</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <Button variant="ink" size="sm">
+      <a href="#contacto" class="cta-link">Hablemos</a>
+    </Button>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  /* ── Brand chip ── */
+  .logo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex: none;
+  }
+  .brand-tile {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--ink);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 7px;
+    flex: none;
+  }
+  .brand-tile .wm { line-height: 0.94; }
+
+  /* ── Nav links ── */
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  nav a {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: var(--ink); }
+
+  /* link inside button */
+  .cta-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    nav { display: none; }
+  }
+</style>

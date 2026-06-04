@@ -1,0 +1,180 @@
+---
+import Button from '../ds/atoms/Button.astro';
+import BadgePill from '../ds/atoms/BadgePill.astro';
+
+const projects = [
+  {
+    title:       'Plataforma fintech',
+    description: 'Dashboard de pagos en tiempo real con gráficas interactivas, notificaciones y reconciliación automática.',
+    stack:       ['React', 'Node.js', 'PostgreSQL'],
+    status:      'ok' as const,
+    statusLabel: 'Entregado',
+    gradient:    'linear-gradient(135deg, #1b2330 0%, #1f4fd6 100%)',
+  },
+  {
+    title:       'E-commerce moderno',
+    description: 'Tienda con carrito persistente, checkout con Stripe, panel de administración y gestión de inventario.',
+    stack:       ['Next.js', 'TypeScript', 'Stripe'],
+    status:      'ok' as const,
+    statusLabel: 'Entregado',
+    gradient:    'linear-gradient(135deg, #12192b 0%, #2d6cff 100%)',
+  },
+  {
+    title:       'App de gestión interna',
+    description: 'Sistema de asignación de tareas, reportes en tiempo real y control de acceso por roles para equipos remotos.',
+    stack:       ['React', 'Firebase', 'TypeScript'],
+    status:      'blue' as const,
+    statusLabel: 'En curso',
+    gradient:    'linear-gradient(135deg, #1a1f2e 0%, #0d3380 100%)',
+  },
+] as const;
+---
+
+<section class="projects" id="trabajo">
+  <div class="inner">
+
+    <div class="sec-header">
+      <div>
+        <div class="eyebrow">Trabajo seleccionado</div>
+        <h2>Proyectos recientes</h2>
+      </div>
+      <Button variant="out">Ver todos →</Button>
+    </div>
+
+    <div class="grid">
+      {projects.map((p) => (
+        <article class="card">
+          <div class="cover" style={`background:${p.gradient}`}>
+            <div class="wm inline rev" style="font-size:14px;position:absolute;left:20px;bottom:16px;">
+              diego castillo<span class="dot" style="color:#fff">.</span>
+            </div>
+          </div>
+          <div class="body">
+            <div class="meta">
+              <BadgePill variant={p.status} label={p.statusLabel} />
+            </div>
+            <h3>{p.title}</h3>
+            <p>{p.description}</p>
+            <div class="stack-row">
+              {p.stack.map((t) => <span class="tag">{t}</span>)}
+            </div>
+            <Button variant="out" size="sm">Ver caso →</Button>
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .projects {
+    background: #fff;
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  /* ── Section header ── */
+  .sec-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--blue-d);
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.03em;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  /* ── Cards grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.18s, transform 0.18s;
+  }
+  .card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+  }
+
+  /* ── Cover ── */
+  .cover {
+    height: 140px;
+    position: relative;
+  }
+
+  /* ── Body ── */
+  .body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 12px;
+  }
+  .meta { display: flex; }
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--ink);
+  }
+  p {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+  }
+
+  /* ── Stack tags ── */
+  .stack-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .projects { padding: 60px 24px; }
+  }
+</style>

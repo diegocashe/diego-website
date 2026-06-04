@@ -1,0 +1,115 @@
+---
+import Button from '../ds/atoms/Button.astro';
+---
+
+<section class="contact" id="contacto">
+  <div class="inner">
+    <div class="label">
+      <span class="dot-accent"></span>
+      Disponible para proyectos
+    </div>
+
+    <h2>
+      ¿Tienes un proyecto<br />
+      en mente<span class="blue-dot">.</span>
+    </h2>
+
+    <p>
+      Cuéntame qué necesitas. Respondo en menos de 24 horas.
+    </p>
+
+    <div class="ctas">
+      <Button variant="blue" size="lg">
+        <a href="mailto:hola@diegocastillo.dev" class="mail-link">
+          hola@diegocastillo.dev
+        </a>
+      </Button>
+      <Button variant="ghost" size="lg" class="ghost-light">Ver LinkedIn →</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--ink);
+    padding: 96px 40px;
+    text-align: center;
+  }
+  .inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* ── Available label ── */
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+  .dot-accent {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ok);
+    flex: none;
+    box-shadow: 0 0 0 0 rgba(31,138,91,0.5);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(31,138,91,0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(31,138,91,0);   }
+    100% { box-shadow: 0 0 0 0   rgba(31,138,91,0);   }
+  }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    letter-spacing: -0.03em;
+    color: #fff;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .blue-dot { color: var(--blue); }
+
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+    margin: 0;
+  }
+
+  /* ── CTAs ── */
+  .ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .mail-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* ghost button on dark background */
+  :global(.ghost-light) {
+    color: rgba(255,255,255,0.65) !important;
+  }
+  :global(.ghost-light:hover) {
+    background: rgba(255,255,255,0.08) !important;
+    color: #fff !important;
+  }
+
+  @media (max-width: 640px) {
+    .contact { padding: 72px 24px; }
+  }
+</style>

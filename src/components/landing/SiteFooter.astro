@@ -1,0 +1,77 @@
+---
+const year = new Date().getFullYear();
+
+const links = [
+  { label: 'GitHub',   href: 'https://github.com/diegocastillo'   },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/diegocastillo' },
+  { label: 'Twitter',  href: 'https://twitter.com/diegocastillo'  },
+] as const;
+---
+
+<footer class="footer">
+  <div class="inner">
+    <div class="brand">
+      <div class="wm inline" style="font-size:18px;">
+        diego castillo<span class="dot">.</span>
+      </div>
+      <span class="copy">© {year}</span>
+    </div>
+
+    <nav aria-label="Redes sociales">
+      {links.map((l) => (
+        <a href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #0d1117;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 28px 40px;
+  }
+  .inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Brand row ── */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand .wm { color: rgba(255,255,255,0.75); }
+  .brand .dot { color: var(--blue); }
+  .copy {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ── Social links ── */
+  nav {
+    display: flex;
+    gap: 24px;
+  }
+  nav a {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: rgba(255,255,255,0.75); }
+
+  @media (max-width: 640px) {
+    .footer  { padding: 24px; }
+    .inner   { justify-content: center; text-align: center; }
+    nav      { justify-content: center; }
+  }
+</style>

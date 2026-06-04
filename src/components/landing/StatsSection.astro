@@ -1,0 +1,73 @@
+---
+const stats = [
+  { label: 'Proyectos',       value: '48',  suffix: '.', delta: '▲ 12 en 2025'          },
+  { label: 'Años de exp.',    value: '5',   suffix: '.', delta: '▲ desde 2019'           },
+  { label: 'Satisfacción',    value: '99',  suffix: '%', delta: '▲ clientes recurrentes'  },
+  { label: 'Tiempo respuesta',value: '< 24',suffix: 'h', delta: '▲ promedio de contacto'  },
+] as const;
+---
+
+<section class="stats">
+  <div class="inner">
+    {stats.map((s) => (
+      <div class="tile">
+        <div class="k">{s.label}</div>
+        <div class="v">{s.value}<span class="accent">{s.suffix}</span></div>
+        <div class="delta">{s.delta}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .stats {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 40px;
+  }
+  .inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .tile {
+    background: var(--bg);
+    padding: 28px 24px;
+  }
+  .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .v {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .accent { color: var(--blue); }
+  .delta {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ok);
+    margin-top: 6px;
+  }
+
+  @media (max-width: 700px) {
+    .inner { grid-template-columns: repeat(2, 1fr); }
+    .stats { padding: 32px 24px; }
+  }
+  @media (max-width: 400px) {
+    .inner { grid-template-columns: 1fr; }
+  }
+</style>
