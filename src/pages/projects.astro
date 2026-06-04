@@ -472,13 +472,13 @@ const stats = [
   function applyFilter(category: string) {
     // Update button states
     filterBar.querySelectorAll<HTMLButtonElement>('.filter-btn').forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.category === category);
+      btn.classList.toggle('active', btn.dataset['category'] === category);
     });
 
     // Show / hide cards
     let visible = 0;
     cards.forEach((card) => {
-      const match = category === 'All' || card.dataset.category === category;
+      const match = category === 'All' || card.dataset['category'] === category;
       card.classList.toggle('hidden', !match);
       if (match) visible++;
     });
@@ -492,6 +492,6 @@ const stats = [
 
   filterBar.addEventListener('click', (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
-    if (btn?.dataset.category) applyFilter(btn.dataset.category);
+    if (btn?.dataset['category']) applyFilter(btn.dataset['category']);
   });
 </script>
