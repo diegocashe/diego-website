@@ -1,0 +1,167 @@
+---
+/**
+ * BlogPostLayout
+ *
+ * Full-page wrapper for individual blog posts.
+ * Accepts post frontmatter as props and renders:
+ *   - SiteNavbar
+ *   - Post header (dark bg, title, meta, tags)
+ *   - Article content via <slot /> with prose typography
+ *   - Back-to-blog link + SiteFooter
+ *
+ * @prop {string}   title       - Post headline
+ * @prop {string}   description - Used in <meta> description
+ * @prop {Date}     pubDate     - Publication date
+ * @prop {string[]} tags        - Topic tags
+ * @prop {number}   readTime    - Minutes
+ */
+import Layout from './Layout.astro';
+import SiteNavbar from '../components/landing/SiteNavbar.astro';
+import SiteFooter from '../components/landing/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+  readTime: number;
+}
+
+const { title, description, pubDate, tags, readTime } = Astro.props;
+
+const fmt = new Intl.DateTimeFormat('es-MX', { day: '2-digit', month: 'long', year: 'numeric' });
+const dateStr = fmt.format(pubDate);
+---
+
+<Layout title={`${title} · Diego Castillo`}>
+  <SiteNavbar />
+
+  <!-- Post header -->
+  <header class="post-header">
+    <div class="inner">
+      <a href="/blog" class="back">← Blog</a>
+
+      <div class="tag-row">
+        {tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+
+      <h1>{title}</h1>
+      <p class="desc">{description}</p>
+
+      <div class="meta">
+        <time datetime={pubDate.toISOString()}>{dateStr}</time>
+        <span class="sep">·</span>
+        <span>{readTime} min de lectura</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Article content -->
+  <main class="article-wrap">
+    <article class="prose">
+      <slot />
+    </article>
+
+    <div class="post-footer">
+      <a href="/blog" class="back-link">← Volver al blog</a>
+    </div>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  /* ── Header ── */
+  .post-header {
+    background: var(--ink);
+    padding: 64px 40px 72px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: color 0.15s;
+    align-self: flex-start;
+  }
+  .back:hover { color: rgba(255,255,255,0.7); }
+
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 4vw, 40px);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: #fff;
+    margin: 0;
+  }
+  .desc {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+    margin: 0;
+    max-width: 580px;
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.3);
+  }
+  .sep { opacity: 0.4; }
+
+  /* ── Article content ── */
+  .article-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 64px 40px 80px;
+  }
+
+  /* .prose typography lives in global.css */
+
+  /* ── Post footer ── */
+  .post-footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .back-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--blue-d);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--blue); }
+
+  @media (max-width: 640px) {
+    .post-header  { padding: 48px 24px 56px; }
+    .article-wrap { padding: 48px 24px 64px; }
+  }
+</style>

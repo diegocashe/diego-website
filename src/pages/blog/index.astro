@@ -1,0 +1,175 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import SiteNavbar from '../../components/landing/SiteNavbar.astro';
+import SiteFooter from '../../components/landing/SiteFooter.astro';
+import PostCard   from '../../components/blog/PostCard.astro';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(({ data }) => data.draft !== true)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const [featured, ...rest] = posts;
+---
+
+<Layout title="Blog · Diego Castillo">
+  <SiteNavbar />
+
+  <!-- Page header -->
+  <header class="page-head">
+    <div class="inner">
+      <div class="eyebrow">Notas & tutoriales</div>
+      <h1>Blog</h1>
+      <p>Escribo sobre React, Node.js, PostgreSQL y el trabajo diario de construir producto.</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="inner">
+
+      <!-- Empty state -->
+      {posts.length === 0 && (
+        <div class="empty">
+          <span class="empty-icon">✦</span>
+          <p>No hay artículos publicados todavía.</p>
+        </div>
+      )}
+
+      <!-- Featured post -->
+      {featured && (
+        <section class="featured-section">
+          <div class="section-label">Reciente</div>
+          <PostCard
+            slug={featured.id}
+            title={featured.data.title}
+            description={featured.data.description}
+            pubDate={featured.data.pubDate}
+            tags={featured.data.tags}
+            readTime={featured.data.readTime}
+            featured
+          />
+        </section>
+      )}
+
+      <!-- Rest of posts -->
+      {rest.length > 0 && (
+        <section class="all-section">
+          <div class="section-label">Todos los artículos</div>
+          <div class="grid">
+            {rest.map((post) => (
+              <PostCard
+                slug={post.id}
+                title={post.data.title}
+                description={post.data.description}
+                pubDate={post.data.pubDate}
+                tags={post.data.tags}
+                readTime={post.data.readTime}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+    </div>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  /* ── Page header ── */
+  .page-head {
+    background: var(--ink);
+    padding: 64px 40px 72px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0 0 14px;
+  }
+  .page-head p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.5);
+    max-width: 480px;
+    margin: 0;
+  }
+
+  /* ── Main content ── */
+  .main {
+    background: var(--bg);
+    padding: 56px 40px 96px;
+    min-height: 60vh;
+  }
+  .main .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 52px;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 18px;
+  }
+
+  /* ── Grids ── */
+  .featured-section :global(.card) {
+    max-width: 720px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  /* ── Empty state ── */
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 80px 0;
+    color: var(--ink-3);
+  }
+  .empty-icon {
+    font-size: 28px;
+    opacity: 0.3;
+  }
+  .empty p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .page-head { padding: 48px 24px 56px; }
+    .main       { padding: 40px 24px 72px; }
+  }
+</style>
