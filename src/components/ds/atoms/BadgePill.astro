@@ -1,0 +1,77 @@
+---
+/**
+ * BadgePill
+ *
+ * Status/label chip used for project states, tags, and counters.
+ * Semantic variants ('blue' | 'ok' | 'warn' | 'gray') automatically render
+ * a small dot indicator. The 'ink' variant is a solid dark chip without a dot.
+ *
+ * @prop {'blue'|'ok'|'warn'|'gray'|'ink'} variant
+ *   Color/semantic meaning of the badge.
+ *   - blue  → in-progress / info
+ *   - ok    → delivered / success
+ *   - warn  → review / caution
+ *   - gray  → paused / neutral
+ *   - ink   → solid dark label (no dot)
+ *
+ * @prop {string}  label   - Visible text inside the badge
+ * @prop {boolean} [dot]   - Override dot visibility. Defaults to `true` for
+ *                           all semantic variants and `false` for 'ink'.
+ *
+ * @example
+ * <BadgePill variant="ok"   label="Entregado" />
+ * <BadgePill variant="ink"  label="Nuevo" />
+ * <BadgePill variant="blue" label="Tú" />
+ */
+type Variant = 'blue' | 'ok' | 'warn' | 'gray' | 'ink';
+
+interface Props {
+  variant: Variant;
+  label: string;
+  dot?: boolean;
+}
+const { variant, label, dot: dotProp } = Astro.props;
+
+const cls = variant === 'ink' ? 'badge-pill badge-ink' : `badge-pill bp-${variant}`;
+const showDot = dotProp ?? variant !== 'ink';
+---
+
+<span class={cls}>
+  {showDot && <span class="d"></span>}
+  {label}
+</span>
+
+<style>
+  .badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 11px;
+    border-radius: 999px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .d {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Variants ── */
+  .bp-blue { background: var(--tint);   color: var(--blue-d); }
+  .bp-blue .d { background: var(--blue); }
+
+  .bp-ok   { background: #e4f5ec; color: var(--ok); }
+  .bp-ok .d { background: var(--ok); }
+
+  .bp-warn { background: #fbeede; color: var(--warn); }
+  .bp-warn .d { background: var(--warn); }
+
+  .bp-gray { background: var(--line-2); color: var(--ink-2); }
+  .bp-gray .d { background: var(--ink-3); }
+
+  .badge-ink { background: var(--ink); color: #fff; }
+</style>

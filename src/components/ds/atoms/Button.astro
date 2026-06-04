@@ -1,0 +1,96 @@
+---
+/**
+ * Button
+ *
+ * Primary interactive element. Owns all `.btn` styles so no button
+ * class leaks into global.css. Renders a native `<button>` and passes
+ * arbitrary content through `<slot>`.
+ *
+ * @prop {'ink'|'blue'|'out'|'ghost'} [variant='ink']
+ *   Visual style:
+ *   - ink   → solid dark fill (primary CTA)
+ *   - blue  → brand-blue fill
+ *   - out   → outline / secondary
+ *   - ghost → text-only / tertiary
+ *
+ * @prop {'sm'|'md'|'lg'} [size='md']  - Size token
+ * @prop {boolean}        [disabled]   - Native disabled attribute
+ * @prop {string}         [style]      - Inline style passthrough
+ * @prop {string}         [class]      - Extra class names appended after base classes
+ *
+ * @example
+ * <Button variant="ink">Ver proyectos <span class="arr">→</span></Button>
+ * <Button variant="out" size="sm">Descargar CV</Button>
+ * <Button variant="blue" disabled>Enviado</Button>
+ */
+type Variant = 'ink' | 'blue' | 'out' | 'ghost';
+type Size    = 'sm' | 'md' | 'lg';
+
+interface Props {
+  variant?:  Variant;
+  size?:     Size;
+  disabled?: boolean;
+  style?:    string;
+  class?:    string;
+}
+
+const {
+  variant  = 'ink',
+  size     = 'md',
+  disabled,
+  style,
+  class: extraClass,
+} = Astro.props;
+
+const cls = [
+  'btn',
+  `btn-${variant}`,
+  size === 'sm' ? 'btn-sm' : size === 'lg' ? 'btn-lg' : '',
+  extraClass,
+].filter(Boolean).join(' ');
+---
+
+<button class={cls} disabled={disabled} style={style}><slot /></button>
+
+<style>
+  .btn {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    padding: 11px 18px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    transition: 0.15s ease;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+
+  /* ── Variants ── */
+  .btn-ink  { background: var(--ink);  color: #fff; }
+  .btn-ink:hover  { background: #222a37; }
+
+  .btn-blue { background: var(--blue); color: #fff; }
+  .btn-blue:hover  { background: var(--blue-d); }
+  .btn-blue:active { background: var(--blue-press); }
+
+  .btn-out  { background: #fff; color: var(--ink); border-color: var(--line); }
+  .btn-out:hover  { border-color: var(--ink-3); background: #fafbfc; }
+
+  .btn-ghost { background: transparent; color: var(--ink); }
+  .btn-ghost:hover { background: var(--line-2); }
+
+  /* ── Sizes ── */
+  .btn-sm { padding: 8px 13px; font-size: 12.5px; border-radius: 8px; }
+  .btn-lg { padding: 14px 24px; font-size: 15px;  border-radius: 12px; }
+
+  /* ── Arrow glyph helper ── */
+  :global(.arr) { font-size: 15px; line-height: 0; }
+</style>

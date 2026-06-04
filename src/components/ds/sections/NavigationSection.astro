@@ -1,0 +1,174 @@
+---
+/**
+ * NavigationSection  (Section 06)
+ *
+ * Three navigation patterns:
+ *
+ * Top bar
+ * - Brand chip: brand-tile (42×42 dark square) + inline wordmark
+ * - Nav links with active state
+ * - CTA via Button atom
+ *
+ * Tabs (interactive — script scoped to #tabs)
+ * - Blue dot indicator on active tab
+ * - Ink underline bar on active tab
+ *
+ * Breadcrumb
+ * - Slash-separated with .on for current page
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+import Button from '../atoms/Button.astro';
+---
+
+<section>
+  <SectionHeader number="06" title="Navegación" />
+
+  <div class="panel pad">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="logo-chip">
+        <div class="brand-tile" style="width:42px;height:42px;border-radius:11px;padding-left:8px;">
+          <div class="wm stack rev" style="font-size:7.5px;">
+            <span>diego</span>
+            <span>castillo<span class="dot">.</span></span>
+          </div>
+        </div>
+        <div class="wm inline" style="font-size:18px;">diego castillo<span class="dot">.</span></div>
+      </div>
+      <div class="nav-links">
+        <span class="active">Trabajo</span>
+        <span>Sobre mí</span>
+        <span>Blog</span>
+        <Button variant="ink" size="sm">Contacto</Button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="tabs">
+      <button class="on"><span class="d"></span>Resumen</button>
+      <button>Proyectos</button>
+      <button>Experiencia</button>
+      <button>Contacto</button>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a>Inicio</a>
+      <span class="sep">/</span>
+      <a>Proyectos</a>
+      <span class="sep">/</span>
+      <a class="on">Plataforma fintech</a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── Brand chip ── */
+  .logo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    background: var(--ink);
+    color: #fff;
+    flex: none;
+    box-sizing: border-box;
+  }
+  .brand-tile .wm { line-height: 0.94; }
+
+  /* ── Top bar ── */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 22px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink-2);
+    white-space: nowrap;
+    flex-wrap: wrap;
+  }
+  .nav-links .active { color: var(--ink); }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    gap: 26px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .tabs button {
+    appearance: none;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink-3);
+    padding: 0 0 14px;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: 0.15s;
+  }
+  .tabs .d {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    opacity: 0;
+    transition: 0.15s;
+  }
+  .tabs button.on { color: var(--ink); }
+  .tabs button.on .d { opacity: 1; }
+  .tabs button.on::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+  }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .breadcrumb .on { color: var(--ink); }
+  .sep { color: var(--line); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('#tabs button').forEach((b) => {
+    b.addEventListener('click', function (this: HTMLButtonElement) {
+      this.parentElement?.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+      this.classList.add('on');
+    });
+  });
+</script>

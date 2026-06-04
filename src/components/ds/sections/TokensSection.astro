@@ -1,0 +1,93 @@
+---
+/**
+ * TokensSection  (Section 02)
+ *
+ * Documents the core design tokens: the full color palette and the
+ * three-family type scale (Space Grotesk · Manrope · JetBrains Mono).
+ *
+ * Color swatches are driven by a typed data array — add or remove tokens
+ * here and the grid updates automatically.
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+import ColorSwatch from '../atoms/ColorSwatch.astro';
+
+const colors = [
+  { name: 'Ink',    hex: '#14181F' },
+  { name: 'Ink 2',  hex: '#565F6E' },
+  { name: 'Blue',   hex: '#2D6CFF' },
+  { name: 'Blue D', hex: '#1F4FD6' },
+  { name: 'Tint',   hex: '#E9F0FF' },
+  { name: 'BG',     hex: '#ECEEF1', border: true },
+] as const;
+---
+
+<section>
+  <SectionHeader number="02" title="Tokens" />
+
+  <div class="grid2">
+
+    <!-- Color palette -->
+    <div class="panel pad">
+      <div class="tag-lab">Color</div>
+      <div class="swatches">
+        {colors.map((c) => (
+          <ColorSwatch name={c.name} hex={c.hex} border={'border' in c ? c.border : false} />
+        ))}
+      </div>
+    </div>
+
+    <!-- Type scale -->
+    <div class="panel pad">
+      <div class="tag-lab">Tipografía · Space Grotesk · Manrope · JetBrains Mono</div>
+      <div>
+        <div class="type-row">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.03em;">Display</span>
+          <span class="spec">Space Grotesk · 700</span>
+        </div>
+        <div class="type-row">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;letter-spacing:-.02em;">Encabezado</span>
+          <span class="spec">Space Grotesk · 600</span>
+        </div>
+        <div class="type-row">
+          <span style="font-size:14px;font-weight:500;">Cuerpo / UI · Manrope</span>
+          <span class="spec">Manrope · 500</span>
+        </div>
+        <div class="type-row">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);">Etiqueta mono</span>
+          <span class="spec">JetBrains Mono · 11</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 880px) {
+    .swatches { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .type-row:last-child { border-bottom: none; }
+
+  .spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,215 @@
+---
+/**
+ * LogoVariations  (Section 01)
+ *
+ * Showcases all official logo treatments:
+ * - Stacked wordmark (primary, left-aligned)
+ * - Inline + role lockup
+ * - Reversed (dark background)
+ * - On brand blue
+ * - Favicon / dc. monogram tiles (64/40/28 px + browser tab simulation)
+ * - Brand avatar tiles (stacked wordmark: dark square / blue circle / tint square)
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+---
+
+<section>
+  <SectionHeader number="01" title="Variaciones del logo" />
+
+  <div class="grid3">
+
+    <!-- Stacked (primary) -->
+    <div class="panel pad">
+      <div class="tag-lab">Apilado</div>
+      <div class="logo-cell">
+        <div class="wm stack" style="font-size:30px;">
+          <span>diego</span>
+          <span>castillo<span class="dot">.</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inline + role -->
+    <div class="panel pad">
+      <div class="tag-lab">En línea + rol</div>
+      <div class="logo-cell">
+        <div style="text-align:center;">
+          <div class="wm inline" style="font-size:26px;">diego castillo<span class="dot">.</span></div>
+          <div class="role-label">Programador</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reversed -->
+    <div class="panel pad">
+      <div class="tag-lab">Reverso</div>
+      <div class="logo-cell dark">
+        <div class="wm inline rev" style="font-size:26px;">diego castillo<span class="dot">.</span></div>
+      </div>
+    </div>
+
+    <!-- On blue -->
+    <div class="panel pad">
+      <div class="tag-lab">Sobre azul</div>
+      <div class="logo-cell blue">
+        <div class="wm inline rev" style="font-size:26px;">
+          diego castillo<span class="dot" style="color:#fff">.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favicon / dc. monogram -->
+    <div class="panel pad">
+      <div class="tag-lab">Favicon</div>
+      <div class="logo-cell fav-col">
+        <div class="fav-sizes">
+          <div>
+            <div class="mono" style="width:60px;height:60px;border-radius:15px;font-size:25px;">dc<span class="dot">.</span></div>
+            <div class="lbl">64</div>
+          </div>
+          <div>
+            <div class="mono" style="width:40px;height:40px;border-radius:10px;font-size:17px;">dc<span class="dot">.</span></div>
+            <div class="lbl">40</div>
+          </div>
+          <div>
+            <div class="mono" style="width:28px;height:28px;border-radius:7px;font-size:12px;">dc<span class="dot">.</span></div>
+            <div class="lbl">28</div>
+          </div>
+        </div>
+        <!-- Browser tab simulation -->
+        <div class="fav-tab">
+          <div class="mono fv" style="font-size:8px;">dc<span class="dot">.</span></div>
+          <span class="tab-label">diego castillo<span style="color:var(--blue)">.</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand avatar tiles -->
+    <div class="panel pad">
+      <div class="tag-lab">Monograma de marca · avatar</div>
+      <div class="logo-cell avatar-row">
+        <!-- Dark square -->
+        <div class="brand-tile" style="width:84px;height:84px;border-radius:20px;padding-left:15px;">
+          <div class="wm stack rev" style="font-size:17px;">
+            <span>diego</span><span>castillo<span class="dot">.</span></span>
+          </div>
+        </div>
+        <!-- Blue circle -->
+        <div class="brand-tile blue" style="width:72px;height:72px;border-radius:50%;padding-left:14px;">
+          <div class="wm stack rev" style="font-size:13px;">
+            <span>diego</span><span>castillo<span class="dot" style="color:#fff">.</span></span>
+          </div>
+        </div>
+        <!-- Tint square -->
+        <div class="brand-tile soft" style="width:72px;height:72px;border-radius:20px;padding-left:13px;">
+          <div class="wm stack" style="font-size:13px;">
+            <span>diego</span><span>castillo<span class="dot">.</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── Logo cell container ── */
+  .logo-cell {
+    display: grid;
+    place-items: center;
+    min-height: 128px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .logo-cell.dark { background: var(--ink); }
+  .logo-cell.blue { background: var(--blue); }
+  .logo-cell.fav-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .logo-cell.avatar-row {
+    display: flex;
+    gap: 18px;
+  }
+
+  /* ── Role label ── */
+  .role-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-top: 9px;
+  }
+
+  /* ── dc. favicon monogram ── */
+  .mono {
+    background: var(--ink);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+  .mono .dot { color: var(--blue); }
+
+  .fav-sizes {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* ── Browser tab simulation ── */
+  .fav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--line-2);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    border-radius: 9px 9px 0 0;
+    padding: 8px 13px 10px;
+  }
+  .fav-tab .fv {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    flex: none;
+  }
+  .tab-label { font-size: 11.5px; color: var(--ink-2); font-weight: 600; }
+
+  /* ── Brand avatar tile ── */
+  .brand-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    background: var(--ink);
+    color: #fff;
+    flex: none;
+    box-sizing: border-box;
+  }
+  .brand-tile.blue { background: var(--blue); }
+  .brand-tile.soft { background: var(--tint); color: var(--ink); }
+  .brand-tile .wm  { line-height: 0.94; }
+
+  /* ── Logo chip (used in nav too — keep here for reference) ── */
+  .logo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>

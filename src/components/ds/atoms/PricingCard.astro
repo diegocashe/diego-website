@@ -1,0 +1,110 @@
+---
+/**
+ * PricingCard
+ *
+ * Pricing tier card with name, price, feature list, and a CTA button.
+ * The `featured` tier gets a dark border, a "Popular" ribbon badge, and
+ * a filled `btn-ink` CTA instead of the default outline style.
+ *
+ * @prop {string}   name      - Tier label (e.g. "Básico", "Pro", "Equipo")
+ * @prop {string}   price     - Price string rendered large (e.g. "$890", "Custom")
+ * @prop {string}   [period]  - Period suffix appended to the price (e.g. "/proyecto")
+ * @prop {string[]} features  - Array of feature strings; each gets a blue checkmark
+ * @prop {string}   ctaLabel  - CTA button text (e.g. "Elegir Pro", "Hablemos")
+ * @prop {boolean}  [featured] - Highlights this tier. Defaults to `false`.
+ *
+ * @example
+ * <PricingCard
+ *   name="Pro"
+ *   price="$890"
+ *   period="/proyecto"
+ *   features={['Web completa', 'CMS + animaciones', 'Revisiones ilimitadas']}
+ *   ctaLabel="Elegir Pro"
+ *   featured
+ * />
+ */
+import Button from './Button.astro';
+import BadgePill from './BadgePill.astro';
+
+interface Props {
+  name: string;
+  price: string;
+  period?: string;
+  features: string[];
+  ctaLabel: string;
+  featured?: boolean;
+}
+const { name, price, period, features, ctaLabel, featured = false } = Astro.props;
+---
+
+<div class:list={['price', { feat: featured }]}>
+  {featured && (
+    <div class="ribbon">
+      <BadgePill variant="ink" label="Popular" />
+    </div>
+  )}
+  <div class="pname">{name}</div>
+  <div class="amt">
+    {price}
+    {period && <span>{period}</span>}
+  </div>
+  <ul>
+    {features.map((f) => (
+      <li><span class="ck">✓</span>{f}</li>
+    ))}
+  </ul>
+  <Button
+    variant={featured ? 'ink' : 'out'}
+    style="width:100%;justify-content:center;"
+  >
+    {ctaLabel}
+  </Button>
+</div>
+
+<style>
+  .price {
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    background: #fff;
+    position: relative;
+  }
+  .price.feat { border-color: var(--ink); }
+
+  .ribbon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+  .pname {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .amt {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 10px 0 2px;
+  }
+  .amt span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-3);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  li {
+    font-size: 13px;
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .ck { color: var(--blue); font-weight: 800; }
+</style>

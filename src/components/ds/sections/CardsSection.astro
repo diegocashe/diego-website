@@ -1,0 +1,126 @@
+---
+/**
+ * CardsSection  (Section 07)
+ *
+ * Row 1 — project & metric cards (3-col grid):
+ * - ProjectCard : gradient cover + BadgePill + title + description + Button
+ * - StatCard ×2 : KPI tiles
+ *
+ * Row 2 — pricing cards (3-col grid via PricingCard atom):
+ * - Básico / Pro (featured) / Equipo
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+import BadgePill from '../atoms/BadgePill.astro';
+import Button from '../atoms/Button.astro';
+import StatCard from '../atoms/StatCard.astro';
+import PricingCard from '../atoms/PricingCard.astro';
+
+const tiers = [
+  {
+    name: 'Básico',
+    price: '$0',
+    period: '/mes',
+    features: ['Landing de 1 página', 'Diseño responsivo', '1 revisión'],
+    ctaLabel: 'Empezar',
+    featured: false,
+  },
+  {
+    name: 'Pro',
+    price: '$890',
+    period: '/proyecto',
+    features: ['Web completa', 'CMS + animaciones', 'Revisiones ilimitadas'],
+    ctaLabel: 'Elegir Pro',
+    featured: true,
+  },
+  {
+    name: 'Equipo',
+    price: 'Custom',
+    features: ['Producto a medida', 'Soporte dedicado', 'SLA'],
+    ctaLabel: 'Hablemos',
+    featured: false,
+  },
+] as const;
+---
+
+<section>
+  <SectionHeader number="07" title="Cards" />
+
+  <!-- Row 1 -->
+  <div class="grid3" style="margin-bottom:22px;">
+
+    <!-- Project card -->
+    <div class="pcard">
+      <div class="cover">
+        <div class="cover-wm wm inline rev" style="font-size:16px;">
+          diego castillo<span class="dot" style="color:#fff">.</span>
+        </div>
+      </div>
+      <div class="c-body">
+        <div style="margin-bottom:10px;">
+          <BadgePill variant="ok" label="Entregado" />
+        </div>
+        <h3>Plataforma fintech</h3>
+        <p>Dashboard de pagos en tiempo real con React y Node.</p>
+        <Button variant="out" size="sm">Ver caso →</Button>
+      </div>
+    </div>
+
+    <StatCard label="Proyectos"    value="48"   delta="▲ 12 este año"          dot />
+    <StatCard label="Satisfacción" value="99%"  delta="▲ clientes recurrentes" />
+
+  </div>
+
+  <!-- Row 2: pricing -->
+  <div class="grid3">
+    {tiers.map((t) => (
+      <PricingCard
+        name={t.name}
+        price={t.price}
+        period={'period' in t ? t.period : undefined}
+        features={[...t.features]}
+        ctaLabel={t.ctaLabel}
+        featured={t.featured}
+      />
+    ))}
+  </div>
+</section>
+
+<style>
+  /* ── Project card ── */
+  .pcard {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    transition: 0.18s;
+  }
+  .pcard:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  .cover {
+    height: 96px;
+    background: linear-gradient(120deg, #1b2330, #2d6cff);
+    position: relative;
+  }
+  .cover-wm {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+  }
+  .c-body { padding: 16px; }
+  .c-body h3 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 5px;
+  }
+  .c-body p {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+</style>

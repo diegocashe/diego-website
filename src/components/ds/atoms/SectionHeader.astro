@@ -1,0 +1,52 @@
+---
+/**
+ * SectionHeader
+ *
+ * Numbered divider row used at the top of every Design System section.
+ * Renders a monospace section number, a Space Grotesk heading, and a
+ * full-width rule that fills the remaining row space.
+ *
+ * @prop {string} number - Zero-padded index shown in blue (e.g. "01", "07")
+ * @prop {string} title  - Section heading text
+ *
+ * @example
+ * <SectionHeader number="01" title="Variaciones del logo" />
+ */
+interface Props {
+  number: string;
+  title: string;
+}
+const { number, title } = Astro.props;
+---
+
+<div class="sec-head">
+  <span class="n">{number}</span>
+  <h2>{title}</h2>
+  <div class="rule"></div>
+</div>
+
+<style>
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--blue);
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+</style>

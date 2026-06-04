@@ -1,0 +1,45 @@
+---
+/**
+ * ButtonsSection  (Section 03)
+ *
+ * Demonstrates all button variants and size tokens using the Button atom.
+ *
+ * Variants
+ * - ink    → primary dark fill
+ * - blue   → brand blue fill
+ * - out    → outline / secondary
+ * - ghost  → text-only / tertiary
+ * - disabled state via `disabled` prop
+ *
+ * Sizes
+ * - sm  → small  (8/13 padding, 12.5px, radius 8)
+ * - md  → medium (default)
+ * - lg  → large  (14/24 padding, 15px, radius 12)
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+import Button from '../atoms/Button.astro';
+---
+
+<section>
+  <SectionHeader number="03" title="Botones" />
+
+  <div class="panel pad">
+    <div class="tag-lab">Variantes</div>
+    <div class="row" style="margin-bottom:22px;">
+      <Button variant="ink">Ver proyectos <span class="arr">→</span></Button>
+      <Button variant="blue">Contratar</Button>
+      <Button variant="out">Descargar CV</Button>
+      <Button variant="ghost">Cancelar</Button>
+      <Button variant="blue" disabled>Enviado</Button>
+    </div>
+
+    <div class="tag-lab">Tamaños</div>
+    <div class="row">
+      <Button variant="ink" size="sm">Pequeño</Button>
+      <Button variant="ink">Mediano</Button>
+      <Button variant="ink" size="lg">Grande <span class="arr">→</span></Button>
+    </div>
+  </div>
+</section>

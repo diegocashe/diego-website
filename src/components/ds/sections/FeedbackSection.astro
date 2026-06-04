@@ -1,0 +1,68 @@
+---
+/**
+ * FeedbackSection  (Section 08)
+ *
+ * Left panel — Alert banners (via Alert atom):
+ * - al-blue  → "Deploy en progreso"
+ * - al-ok    → "Mensaje enviado"
+ * - al-warn  → "Dominio por expirar"
+ *
+ * Right panel — Avatar list (via AvatarListItem atom):
+ * - DC  : online presence dot + blue badge "Tú"
+ * - MR  : blue avatar + outline "Mensaje" button
+ * - JL  : gray avatar + ghost "Ver" button
+ *
+ * All content is driven by typed arrays — add rows by extending the arrays.
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+import Alert from '../atoms/Alert.astro';
+import AvatarListItem from '../atoms/AvatarListItem.astro';
+
+const alerts = [
+  { variant: 'blue', icon: 'i', title: 'Deploy en progreso',  description: 'Tu sitio estará en línea en ~2 minutos.' },
+  { variant: 'ok',   icon: '✓', title: 'Mensaje enviado',     description: 'Diego te responderá en menos de 24 h.'  },
+  { variant: 'warn', icon: '!', title: 'Dominio por expirar', description: 'Renueva antes del 30 de junio.'          },
+] as const;
+
+const contacts = [
+  { initials: 'DC', name: 'Diego Castillo', role: 'Programador · en línea', online: true,   action: 'badge'     as const, actionLabel: 'Tú'      },
+  { initials: 'MR', name: 'María Ríos',     role: 'Diseñadora',             avatarBg: 'var(--blue)', action: 'btn-out'   as const, actionLabel: 'Mensaje' },
+  { initials: 'JL', name: 'Juan López',     role: 'PM · ausente',           avatarBg: '#3a4250',     action: 'btn-ghost' as const, actionLabel: 'Ver'     },
+] as const;
+---
+
+<section>
+  <SectionHeader number="08" title="Feedback & listas" />
+
+  <div class="grid2">
+
+    <div class="panel pad">
+      <div class="tag-lab">Alertas</div>
+      <div class="stack-v">
+        {alerts.map((a) => (
+          <Alert variant={a.variant} icon={a.icon} title={a.title} description={a.description} />
+        ))}
+      </div>
+    </div>
+
+    <div class="panel pad">
+      <div class="tag-lab">Item de lista / avatar</div>
+      <div>
+        {contacts.map((c) => (
+          <AvatarListItem
+            initials={c.initials}
+            name={c.name}
+            role={c.role}
+            avatarBg={'avatarBg' in c ? c.avatarBg : undefined}
+            online={'online' in c ? c.online : false}
+            action={c.action}
+            actionLabel={c.actionLabel}
+          />
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>

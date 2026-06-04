@@ -1,0 +1,63 @@
+---
+/**
+ * StatCard
+ *
+ * Metric tile showing a KPI label, a large numeric value, and a trend line.
+ * The `dot` prop appends a blue accent dot after the number — matching the
+ * "48." treatment in the design system.
+ *
+ * @prop {string}  label - Uppercase mono label (e.g. "Proyectos")
+ * @prop {string}  value - Primary display value (e.g. "48", "99%")
+ * @prop {string}  delta - Trend or supporting text (e.g. "▲ 12 este año")
+ * @prop {boolean} [dot] - Append a blue `.dot` accent after `value`. Default `false`.
+ *
+ * @example
+ * <StatCard label="Proyectos"    value="48"   delta="▲ 12 este año" dot />
+ * <StatCard label="Satisfacción" value="99%"  delta="▲ clientes recurrentes" />
+ */
+interface Props {
+  label: string;
+  value: string;
+  delta: string;
+  dot?: boolean;
+}
+const { label, value, delta, dot = false } = Astro.props;
+---
+
+<div class="stat">
+  <div class="k">{label}</div>
+  <div class="v">
+    {value}
+    {dot && <span class="dot">.</span>}
+  </div>
+  <div class="delta">{delta}</div>
+</div>
+
+<style>
+  .stat {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+  }
+  .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .v {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-top: 6px;
+  }
+  .dot { color: var(--blue); }
+  .delta {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ok);
+    margin-top: 4px;
+  }
+</style>

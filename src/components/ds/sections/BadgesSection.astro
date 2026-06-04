@@ -1,0 +1,238 @@
+---
+/**
+ * BadgesSection  (Section 05)
+ *
+ * Left panel — badges + tags:
+ * - Status badge pills (via BadgePill atom)
+ * - Mono tech tags (.tag outline style)
+ *
+ * Right panel — interactive controls (client-side script scoped to #seg):
+ * - Toggle switch
+ * - Checkboxes (checked / unchecked)
+ * - Radio buttons
+ * - Segmented control
+ *
+ * No props — fully static design-system content.
+ */
+import SectionHeader from '../atoms/SectionHeader.astro';
+import BadgePill from '../atoms/BadgePill.astro';
+---
+
+<section>
+  <SectionHeader number="05" title="Badges & controles" />
+
+  <div class="grid2">
+
+    <!-- Left: badges + tags -->
+    <div class="panel pad">
+      <div class="tag-lab">Badges / estados</div>
+      <div class="row" style="margin-bottom:18px;">
+        <BadgePill variant="blue" label="En curso" />
+        <BadgePill variant="ok"   label="Entregado" />
+        <BadgePill variant="warn" label="En revisión" />
+        <BadgePill variant="gray" label="Pausado" />
+        <BadgePill variant="ink"  label="Nuevo" />
+      </div>
+
+      <div class="tag-lab">Tags técnicos</div>
+      <div class="row">
+        <span class="tag">React</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">Node</span>
+        <span class="tag">PostgreSQL</span>
+      </div>
+    </div>
+
+    <!-- Right: interactive controls -->
+    <div class="panel pad">
+      <div class="tag-lab">Toggles, checks, radios</div>
+      <div class="stack-v">
+
+        <div class="row" style="gap:28px;">
+          <label class="switch">
+            <input type="checkbox" checked />
+            <span class="track"></span>
+            Disponible para proyectos
+          </label>
+        </div>
+
+        <div class="row" style="gap:28px;">
+          <label class="check">
+            <input type="checkbox" checked />
+            <span class="box">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            Términos
+          </label>
+          <label class="check">
+            <input type="checkbox" />
+            <span class="box">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            Newsletter
+          </label>
+        </div>
+
+        <div class="row" style="gap:28px;">
+          <label class="radio"><input type="radio" name="plan" checked /><span class="dot-r"></span>Mensual</label>
+          <label class="radio"><input type="radio" name="plan" /><span class="dot-r"></span>Anual</label>
+        </div>
+
+        <div class="seg" id="seg">
+          <button class="on">Diseño</button>
+          <button>Código</button>
+          <button>Deploy</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Tech tag ── */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink-2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Toggle switch ── */
+  .switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 11px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .switch input { position: absolute; opacity: 0; }
+  .track {
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: #d4d8df;
+    transition: 0.18s;
+    flex: none;
+    position: relative;
+  }
+  .track::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    transition: 0.18s;
+  }
+  .switch input:checked + .track { background: var(--blue); }
+  .switch input:checked + .track::after { transform: translateX(18px); }
+  .switch input:focus-visible + .track { box-shadow: 0 0 0 4px var(--tint); }
+
+  /* ── Checkbox ── */
+  .check {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .check input { position: absolute; opacity: 0; }
+  .box {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--line);
+    display: grid;
+    place-items: center;
+    transition: 0.15s;
+    flex: none;
+  }
+  .box svg { opacity: 0; transition: 0.12s; }
+  .check input:checked + .box { background: var(--blue); border-color: var(--blue); }
+  .check input:checked + .box svg { opacity: 1; }
+  .check input:focus-visible + .box { box-shadow: 0 0 0 4px var(--tint); }
+
+  /* ── Radio ── */
+  .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .radio input { position: absolute; opacity: 0; }
+  .dot-r {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    display: grid;
+    place-items: center;
+    transition: 0.15s;
+    flex: none;
+  }
+  .dot-r::after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--blue);
+    transform: scale(0);
+    transition: 0.15s;
+  }
+  .radio input:checked + .dot-r { border-color: var(--blue); }
+  .radio input:checked + .dot-r::after { transform: scale(1); }
+
+  /* ── Segmented control ── */
+  .seg {
+    display: inline-flex;
+    background: var(--line-2);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .seg button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink-2);
+    padding: 7px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .seg button.on {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('#seg button').forEach((b) => {
+    b.addEventListener('click', function (this: HTMLButtonElement) {
+      this.parentElement?.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+      this.classList.add('on');
+    });
+  });
+</script>

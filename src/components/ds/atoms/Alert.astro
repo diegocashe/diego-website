@@ -1,0 +1,75 @@
+---
+/**
+ * Alert
+ *
+ * Feedback banner with a colored icon pill, a bold title, and supporting text.
+ * The variant drives both the background tint and the icon pill color.
+ *
+ * @prop {'blue'|'ok'|'warn'} variant
+ *   Semantic intent:
+ *   - blue → info / in-progress
+ *   - ok   → success / delivered
+ *   - warn → caution / expiring
+ *
+ * @prop {string} icon        - Single character or symbol for the icon pill
+ *                              (e.g. "i", "✓", "!")
+ * @prop {string} title       - Bold alert heading
+ * @prop {string} description - Supporting detail line
+ *
+ * @example
+ * <Alert variant="ok"   icon="✓" title="Mensaje enviado"     description="Diego te responderá en menos de 24 h." />
+ * <Alert variant="warn" icon="!" title="Dominio por expirar"  description="Renueva antes del 30 de junio." />
+ */
+type AlertVariant = 'blue' | 'ok' | 'warn';
+
+interface Props {
+  variant: AlertVariant;
+  icon: string;
+  title: string;
+  description: string;
+}
+const { variant, icon, title, description } = Astro.props;
+---
+
+<div class={`alert al-${variant}`}>
+  <div class="ai">{icon}</div>
+  <div>
+    <div class="at">{title}</div>
+    <div class="ad">{description}</div>
+  </div>
+</div>
+
+<style>
+  .alert {
+    display: flex;
+    gap: 13px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    align-items: flex-start;
+  }
+  .ai {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    flex: none;
+    font-weight: 800;
+    font-size: 13px;
+    color: #fff;
+  }
+  .at { font-weight: 700; font-size: 13.5px; }
+  .ad { font-size: 12.5px; color: var(--ink-2); margin-top: 2px; line-height: 1.5; }
+
+  /* ── Variants ── */
+  .al-blue { background: var(--tint); border-color: #cfe0ff; }
+  .al-blue .ai { background: var(--blue); }
+
+  .al-ok   { background: #e8f6ee; border-color: #c4e8d3; }
+  .al-ok .ai   { background: var(--ok); }
+
+  .al-warn { background: #fcf1e1; border-color: #f0dcb9; }
+  .al-warn .ai { background: var(--warn); }
+</style>

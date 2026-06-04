@@ -1,0 +1,99 @@
+---
+/**
+ * AvatarListItem
+ *
+ * Contact/team row: circular avatar with initials, name, role subtitle,
+ * and an optional trailing action (badge or button).
+ *
+ * @prop {string}  initials       - Up to 2 initials shown inside the avatar circle
+ * @prop {string}  name           - Full display name
+ * @prop {string}  role           - Role or status subtitle (e.g. "Programador · en línea")
+ * @prop {string}  [avatarBg]     - CSS color value for the avatar background.
+ *                                  Defaults to `var(--ink)` via the `.ava` class.
+ * @prop {boolean} [online]       - Renders a green presence dot on the avatar. Default `false`.
+ * @prop {'badge'|'btn-out'|'btn-ghost'} [action]
+ *   Trailing action type:
+ *   - badge     → blue BadgePill
+ *   - btn-out   → outline Button
+ *   - btn-ghost → ghost Button
+ * @prop {string}  [actionLabel]  - Text for the trailing action
+ *
+ * @example
+ * <AvatarListItem
+ *   initials="DC"
+ *   name="Diego Castillo"
+ *   role="Programador · en línea"
+ *   online
+ *   action="badge"
+ *   actionLabel="Tú"
+ * />
+ */
+import BadgePill from './BadgePill.astro';
+import Button from './Button.astro';
+
+type ActionType = 'badge' | 'btn-out' | 'btn-ghost';
+
+interface Props {
+  initials: string;
+  name: string;
+  role: string;
+  avatarBg?: string;
+  online?: boolean;
+  action?: ActionType;
+  actionLabel?: string;
+}
+const { initials, name, role, avatarBg, online = false, action, actionLabel } = Astro.props;
+---
+
+<div class="litem">
+  <div class="ava" style={avatarBg ? `background:${avatarBg}` : undefined}>
+    {initials}
+    {online && <span class="presence"></span>}
+  </div>
+  <div class="info">
+    <div class="nm">{name}</div>
+    <div class="sub">{role}</div>
+  </div>
+  {action === 'badge'     && actionLabel && <BadgePill variant="blue" label={actionLabel} />}
+  {action === 'btn-out'   && actionLabel && <Button variant="out"   size="sm">{actionLabel}</Button>}
+  {action === 'btn-ghost' && actionLabel && <Button variant="ghost" size="sm">{actionLabel}</Button>}
+</div>
+
+<style>
+  .litem {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .litem:last-child { border-bottom: none; }
+
+  .ava {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex: none;
+    position: relative;
+  }
+  .presence {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--ok);
+    border: 2px solid #fff;
+  }
+
+  .info { flex: 1; }
+  .nm  { font-weight: 700; font-size: 13.5px; }
+  .sub { font-size: 12px; color: var(--ink-3); }
+</style>

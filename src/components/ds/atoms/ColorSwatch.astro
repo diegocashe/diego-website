@@ -1,0 +1,56 @@
+---
+/**
+ * ColorSwatch
+ *
+ * Single design-token color tile: a solid color chip stacked over the
+ * token name and its hex value in monospace.
+ *
+ * @prop {string}  name     - Human-readable token name (e.g. "Ink", "Blue D")
+ * @prop {string}  hex      - Full hex string including the `#` (e.g. "#14181F")
+ * @prop {boolean} [border] - Adds a right border on the chip — useful for
+ *                            near-white swatches that would otherwise bleed
+ *                            into the panel background. Defaults to `false`.
+ *
+ * @example
+ * <ColorSwatch name="Ink"  hex="#14181F" />
+ * <ColorSwatch name="BG"   hex="#ECEEF1" border />
+ */
+interface Props {
+  name: string;
+  hex: string;
+  border?: boolean;
+}
+const { name, hex, border = false } = Astro.props;
+
+const chipStyle = border
+  ? `background:${hex};border-right:1px solid var(--line)`
+  : `background:${hex}`;
+---
+
+<div class="sw">
+  <div class="chip" style={chipStyle}></div>
+  <div class="meta">
+    <b>{name}</b>
+    <code>{hex.toUpperCase()}</code>
+  </div>
+</div>
+
+<style>
+  .sw {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .chip { height: 64px; }
+  .meta { padding: 8px 10px; }
+  .meta b {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .meta code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-3);
+  }
+</style>
