@@ -1,0 +1,172 @@
+---
+/**
+ * TimelineItem
+ *
+ * Single row in a vertical timeline. Used for both Experience and Education
+ * on the CV page. The connecting line is drawn by the parent timeline
+ * container — this component only renders the dot and body.
+ *
+ * @prop {string}   company  - Organisation name (or institution for edu)
+ * @prop {string}   location
+ * @prop {string}   role     - Job title or degree name
+ * @prop {string}   [focus]  - Subtitle line (education only)
+ * @prop {string}   period   - Date range string
+ * @prop {boolean}  current  - Highlights dot in blue + shows live pulse
+ * @prop {boolean}  [last]   - Omits the connector line below the dot
+ * @prop {string[]} [bullets] - Bullet points (experience only)
+ */
+interface Props {
+  company:   string;
+  location:  string;
+  role:      string;
+  focus?:    string;
+  period:    string;
+  current:   boolean;
+  last?:     boolean;
+  bullets?:  readonly string[];
+}
+const { company, location, role, focus, period, current, last = false, bullets } = Astro.props;
+---
+
+<div class:list={['tl-item', { current }]}>
+  <div class="tl-marker">
+    <div class="tl-dot"></div>
+    {!last && <div class="tl-line"></div>}
+  </div>
+  <div class="tl-body">
+    <div class="tl-header">
+      <div class="tl-left">
+        <div class="tl-company">
+          {company}<span class="tl-loc"> · {location}</span>
+        </div>
+        <div class="tl-role">{role}</div>
+        {focus && <div class="tl-focus">{focus}</div>}
+      </div>
+      <div class:list={['tl-period', { current }]}>
+        {current && <span class="live-dot"></span>}
+        {period}
+      </div>
+    </div>
+    {bullets && bullets.length > 0 && (
+      <ul class="tl-bullets">
+        {bullets.map((b) => <li>{b}</li>)}
+      </ul>
+    )}
+  </div>
+</div>
+
+<style>
+  .tl-item {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 0 20px;
+  }
+
+  /* ── Marker ── */
+  .tl-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+  }
+  .tl-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--line);
+    border: 2px solid var(--line);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .tl-item.current .tl-dot {
+    background: var(--blue);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px var(--tint);
+  }
+  .tl-line {
+    width: 2px;
+    flex: 1;
+    background: var(--line);
+    margin-top: 4px;
+    min-height: 20px;
+  }
+
+  /* ── Body ── */
+  .tl-body { padding-bottom: 36px; }
+
+  .tl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .tl-company {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .tl-loc { font-weight: 500; color: var(--ink-3); font-size: 13px; }
+  .tl-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--blue-d);
+    letter-spacing: 0.04em;
+    margin-top: 3px;
+  }
+  .tl-focus { font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+
+  .tl-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .tl-period.current { color: var(--ok); }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(31,138,91,0.45); }
+    70%  { box-shadow: 0 0 0 6px rgba(31,138,91,0);    }
+    100% { box-shadow: 0 0 0 0   rgba(31,138,91,0);    }
+  }
+
+  /* ── Bullets ── */
+  .tl-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tl-bullets li {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    padding-left: 14px;
+    position: relative;
+  }
+  .tl-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-size: 11px;
+    top: 2px;
+  }
+</style>

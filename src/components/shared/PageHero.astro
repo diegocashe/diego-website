@@ -1,0 +1,52 @@
+---
+/**
+ * PageHero
+ *
+ * Dark page header used on /blog, /projects, and any future listing page.
+ * Uses the global `.page-header-dark` CSS class so no duplicate styles exist.
+ *
+ * @prop {string} eyebrow    - Small mono label above the title
+ * @prop {string} title      - h1 text (blue dot appended automatically)
+ * @prop {string} [description] - Optional lead paragraph
+ *
+ * Extra content (stats row, filter bar, etc.) goes in <slot />.
+ */
+interface Props {
+  eyebrow:      string;
+  title:        string;
+  description?: string;
+}
+const { eyebrow, title, description } = Astro.props;
+---
+
+<header class="page-header-dark">
+  <div class="page-inner">
+    <div class="eyebrow-muted">{eyebrow}</div>
+    <h1>{title}<span class="accent">.</span></h1>
+    {description && <p class="lead">{description}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .page-inner { padding-top: 0; }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 14px 0 16px;
+    line-height: 1.05;
+  }
+  .accent { color: var(--blue); }
+
+  .lead {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.45);
+    max-width: 520px;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+/**
+ * PublicationCard
+ *
+ * Academic publication entry: title, authors byline, abstract.
+ *
+ * @prop {string} title    - Paper title
+ * @prop {string} authors  - Comma-separated author names
+ * @prop {string} abstract - One-paragraph summary
+ */
+interface Props {
+  title:    string;
+  authors:  string;
+  abstract: string;
+}
+const { title, authors, abstract } = Astro.props;
+---
+
+<div class="pub-card">
+  <div class="pub-title">{title}</div>
+  <div class="pub-authors">{authors}</div>
+  <p class="pub-abstract">{abstract}</p>
+</div>
+
+<style>
+  .pub-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pub-title {
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .pub-authors {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--blue-d);
+    letter-spacing: 0.04em;
+  }
+  .pub-abstract {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-3);
+    margin: 4px 0 0;
+  }
+</style>

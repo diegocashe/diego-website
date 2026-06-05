@@ -1,11 +1,6 @@
 ---
+import { socialLinks } from '../../data/site';
 const year = new Date().getFullYear();
-
-const links = [
-  { label: 'GitHub',   href: 'https://github.com/diegocastillo'   },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/diegocastillo' },
-  { label: 'Twitter',  href: 'https://twitter.com/diegocastillo'  },
-] as const;
 ---
 
 <footer class="footer">
@@ -18,7 +13,7 @@ const links = [
     </div>
 
     <nav aria-label="Redes sociales">
-      {links.map((l) => (
+      {socialLinks.map((l) => (
         <a href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>
       ))}
     </nav>

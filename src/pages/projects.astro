@@ -1,149 +1,40 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SiteNavbar from '../components/landing/SiteNavbar.astro';
-import SiteFooter from '../components/landing/SiteFooter.astro';
-
-const projects = [
-  {
-    slug: 'lms-platform',
-    title: 'White-Label LMS Platform',
-    description: 'Scalable learning management platform architected with React and NestJS. Same core codebase deployed under two completely different UI designs for corporate hospitality buyers — no forking, no duplication.',
-    tags: ['React', 'NestJS', 'TypeScript', 'Multi-tenant'],
-    category: 'Full-Stack',
-    status: 'delivered',
-    year: 2025,
-    company: 'TagWizz',
-    gradient: 'linear-gradient(135deg, #0f1923 0%, #1f4fd6 100%)',
-  },
-  {
-    slug: 'erp-inventory',
-    title: 'Enterprise ERP & Inventory System',
-    description: 'End-to-end ERP for retail brands: multi-platform catalog synchronization, complex stock movement logic, warehouse zoning, and automated reorder rules. Replaced a fragmented spreadsheet workflow.',
-    tags: ['CakePHP', 'Node.js', 'React', 'MySQL', 'MVC'],
-    category: 'Enterprise',
-    status: 'delivered',
-    year: 2024,
-    company: 'Freelance',
-    gradient: 'linear-gradient(135deg, #111827 0%, #065f46 100%)',
-  },
-  {
-    slug: 'fintech-dashboard',
-    title: 'Real-Time Payments Dashboard',
-    description: 'High-frequency payments platform with live transaction monitoring, multi-currency reconciliation, fraud flag UI, and role-based access for operations teams.',
-    tags: ['React', 'Node.js', 'PostgreSQL', 'WebSocket'],
-    category: 'Full-Stack',
-    status: 'delivered',
-    year: 2024,
-    company: 'Freelance',
-    gradient: 'linear-gradient(135deg, #1b2330 0%, #2d6cff 100%)',
-  },
-  {
-    slug: 'ai-video-qa',
-    title: 'AI Video QA Analysis Tool',
-    description: 'Internal tool for video game QA. An AI model flags bugs automatically; this UI lets analysts review those reports on a timeline-based video editor built in QML and Python.',
-    tags: ['QML', 'Python', 'AI Integration', 'Video Editor'],
-    category: 'AI / Data',
-    status: 'delivered',
-    year: 2024,
-    company: 'TagWizz',
-    gradient: 'linear-gradient(135deg, #1a0533 0%, #7c3aed 100%)',
-  },
-  {
-    slug: 'sms-rp-analytics',
-    title: 'SMS RP Game Analytics System',
-    description: 'High-traffic front-end for a real-time data pipeline that processes and displays video game session analytics, leaderboards, and event streams for an SMS role-play platform.',
-    tags: ['React', 'NestJS', 'AWS', 'Real-time'],
-    category: 'Frontend',
-    status: 'delivered',
-    year: 2023,
-    company: 'TagWizz',
-    gradient: 'linear-gradient(135deg, #0c1a12 0%, #16a34a 100%)',
-  },
-  {
-    slug: 'web3-gaming-platform',
-    title: 'Web3 Gaming Platform',
-    description: 'Decentralized workflows and crypto-wallet connections integrated into a gaming front-end. Blockchain transaction UI, wallet connection flows, and CRM views for a Pay-for-Game platform shipped on the App Store.',
-    tags: ['Vue 2', 'Web3', 'Crypto-Wallet', 'Blockchain', 'CRM'],
-    category: 'Frontend',
-    status: 'delivered',
-    year: 2023,
-    company: 'TagWizz',
-    gradient: 'linear-gradient(135deg, #170d2a 0%, #d97706 100%)',
-  },
-  {
-    slug: 'carbozulia-asset-mgmt',
-    title: 'CARBOZULIA Asset Management',
-    description: 'Custom internal web application for Carbones del Zulia to automate large-scale technological and infrastructure asset inventory — replacing manual tracking across multiple departments.',
-    tags: ['CakePHP', 'PHP', 'MySQL', 'MVC'],
-    category: 'Enterprise',
-    status: 'delivered',
-    year: 2022,
-    company: 'CARBOZULIA',
-    gradient: 'linear-gradient(135deg, #1c1408 0%, #b45309 100%)',
-  },
-  {
-    slug: 'data-pipelines',
-    title: 'Financial Data Pipelines',
-    description: 'Automated scraping and ETL pipelines in Python that track, extract, and consolidate dynamic multi-platform financial data and market prices from diverse web sources into unified BI dashboards.',
-    tags: ['Python', 'Pandas', 'Web Scraping', 'SQL', 'Business Intelligence'],
-    category: 'AI / Data',
-    status: 'delivered',
-    year: 2023,
-    company: 'Freelance',
-    gradient: 'linear-gradient(135deg, #0a1628 0%, #0891b2 100%)',
-  },
-  {
-    slug: 'headless-sme-websites',
-    title: 'Headless CMS Web Suite (SMEs)',
-    description: 'Series of production websites for small and mid-sized businesses using Astro + Strapi as headless CMS. Focused on Core Web Vitals, multi-language SEO, and zero-JS-by-default performance.',
-    tags: ['Astro', 'Next.js', 'Strapi', 'TypeScript', 'SEO'],
-    category: 'Frontend',
-    status: 'delivered',
-    year: 2024,
-    company: 'Freelance',
-    gradient: 'linear-gradient(135deg, #0d1f2d 0%, #0e7490 100%)',
-  },
-] as const;
-
-const categories = ['All', 'Full-Stack', 'Frontend', 'Enterprise', 'AI / Data'] as const;
+import Layout      from '../layouts/Layout.astro';
+import SiteNavbar  from '../components/landing/SiteNavbar.astro';
+import SiteFooter  from '../components/landing/SiteFooter.astro';
+import PageHero    from '../components/shared/PageHero.astro';
+import ProjectCard from '../components/projects/ProjectCard.astro';
+import { projects, categories } from '../data/projects';
 
 const stats = [
-  { value: '9+', label: 'proyectos destacados' },
-  { value: '7+', label: 'años de experiencia'  },
-  { value: '4',  label: 'industrias'            },
-  { value: '15+', label: 'tecnologías'          },
+  { value: '9+',  label: 'proyectos destacados' },
+  { value: '7+',  label: 'años de experiencia'  },
+  { value: '4',   label: 'industrias'            },
+  { value: '15+', label: 'tecnologías'           },
 ] as const;
 ---
 
 <Layout title="Proyectos · Diego Castillo">
   <SiteNavbar />
 
-  <!-- Hero -->
-  <header class="page-hero">
-    <div class="inner">
-      <div class="eyebrow">Trabajo seleccionado</div>
-      <h1>Proyectos<span class="dot">.</span></h1>
-      <p>
-        Aplicaciones en producción: ERPs, plataformas LMS, dashboards en tiempo real,
-        herramientas con IA y sistemas Web3. Cada uno resolvió un problema real.
-      </p>
-
-      <div class="hero-stats">
-        {stats.map((s) => (
-          <div class="hstat">
-            <div class="hstat-v">{s.value}</div>
-            <div class="hstat-l">{s.label}</div>
-          </div>
-        ))}
-      </div>
+  <PageHero
+    eyebrow="Trabajo seleccionado"
+    title="Proyectos"
+    description="Aplicaciones en producción: ERPs, plataformas LMS, dashboards en tiempo real, herramientas con IA y sistemas Web3. Cada uno resolvió un problema real."
+  >
+    <div class="hero-stats">
+      {stats.map((s) => (
+        <div class="hstat">
+          <div class="hstat-v">{s.value}</div>
+          <div class="hstat-l">{s.label}</div>
+        </div>
+      ))}
     </div>
-  </header>
+  </PageHero>
 
-  <!-- Filter + Grid -->
   <main class="main">
-    <div class="inner">
+    <div class="page-inner">
 
-      <!-- Category filter -->
       <div class="filter-bar" id="filter-bar">
         {categories.map((cat) => (
           <button
@@ -155,43 +46,26 @@ const stats = [
         ))}
       </div>
 
-      <!-- Count -->
       <div class="count-row">
         <span id="count-label">{projects.length} proyectos</span>
       </div>
 
-      <!-- Projects grid -->
       <div class="grid" id="projects-grid">
         {projects.map((p) => (
-          <article class="card" data-category={p.category}>
-            <!-- Cover -->
-            <div class="cover" style={`background:${p.gradient}`}>
-              <span class="cover-cat">{p.category}</span>
-              <span class="cover-year">{p.year}</span>
-            </div>
-
-            <!-- Body -->
-            <div class="body">
-              <div class="meta-row">
-                <span class:list={['status', p.status]}>
-                  <span class="status-dot"></span>
-                  {p.status === 'delivered' ? 'Entregado' : 'En curso'}
-                </span>
-                <span class="company">{p.company}</span>
-              </div>
-
-              <h2>{p.title}</h2>
-              <p>{p.description}</p>
-
-              <div class="tags">
-                {p.tags.map((t) => <span class="tag">{t}</span>)}
-              </div>
-            </div>
-          </article>
+          <ProjectCard
+            slug={p.slug}
+            title={p.title}
+            description={p.description}
+            tags={p.tags}
+            category={p.category}
+            status={p.status}
+            year={p.year}
+            company={p.company}
+            gradient={p.gradient}
+          />
         ))}
       </div>
 
-      <!-- Empty state (shown by JS when filter yields 0) -->
       <div class="empty" id="empty-state" style="display:none;">
         <span class="empty-icon">✦</span>
         <p>No hay proyectos en esta categoría todavía.</p>
@@ -204,56 +78,21 @@ const stats = [
 </Layout>
 
 <style>
-  /* ── Hero ── */
-  .page-hero {
-    background: var(--ink);
-    padding: 64px 40px 72px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .inner {
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    margin-bottom: 14px;
-  }
-  h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: clamp(36px, 5vw, 56px);
-    letter-spacing: -0.03em;
-    color: #fff;
-    margin: 0 0 16px;
-  }
-  .dot { color: var(--blue); }
-  .page-hero p {
-    font-size: 15.5px;
-    line-height: 1.65;
-    color: rgba(255,255,255,0.45);
-    max-width: 520px;
-    margin: 0 0 40px;
-  }
-
-  /* ── Hero stats ── */
+  /* ── Hero extras (slot content) ── */
   .hero-stats {
     display: flex;
     gap: 40px;
     flex-wrap: wrap;
+    margin-top: 32px;
   }
   .hstat-v {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 800;
     font-size: 28px;
     letter-spacing: -0.04em;
-    color: #fff;
+    color: var(--blue);
     line-height: 1;
   }
-  .hstat-v { color: var(--blue); }
   .hstat-l {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
@@ -268,7 +107,11 @@ const stats = [
     background: var(--bg);
     padding: 48px 40px 96px;
   }
-  .main .inner { display: flex; flex-direction: column; gap: 28px; }
+  .main .page-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
 
   /* ── Filter bar ── */
   .filter-bar {
@@ -290,13 +133,8 @@ const stats = [
     transition: all 0.15s;
   }
   .filter-btn:hover { border-color: var(--ink-3); color: var(--ink); }
-  .filter-btn.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: #fff;
-  }
+  .filter-btn.active { background: var(--ink); border-color: var(--ink); color: #fff; }
 
-  /* ── Count ── */
   .count-row {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -309,130 +147,6 @@ const stats = [
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 22px;
-  }
-
-  /* ── Card ── */
-  .card {
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    overflow: hidden;
-    background: var(--paper);
-    display: flex;
-    flex-direction: column;
-    transition: box-shadow 0.18s, transform 0.18s;
-  }
-  .card:hover {
-    box-shadow: var(--shadow);
-    transform: translateY(-3px);
-  }
-  .card.hidden { display: none; }
-
-  /* Cover */
-  .cover {
-    height: 130px;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 14px 16px;
-    overflow: hidden;
-  }
-  .cover::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      -45deg,
-      rgba(255,255,255,0.025) 0px,
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px,
-      transparent 14px
-    );
-  }
-  .cover-cat {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9.5px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
-    position: relative;
-  }
-  .cover-year {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: rgba(255,255,255,0.25);
-    position: relative;
-  }
-
-  /* Body */
-  .body {
-    padding: 18px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 1;
-  }
-  .meta-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11.5px;
-    font-weight: 700;
-  }
-  .status.delivered { color: var(--ok); }
-  .status.in-progress { color: var(--blue); }
-  .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    flex-shrink: 0;
-  }
-  .company {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-  }
-
-  h2 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 15.5px;
-    letter-spacing: -0.02em;
-    line-height: 1.25;
-    color: var(--ink);
-    margin: 0;
-  }
-  .body p {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--ink-2);
-    margin: 0;
-    flex: 1;
-  }
-
-  .tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-  .tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    color: var(--ink-3);
   }
 
   /* ── Empty state ── */
@@ -452,12 +166,10 @@ const stats = [
     margin: 0;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 600px) {
-    .grid       { grid-template-columns: 1fr; }
-    .page-hero  { padding: 48px 24px 56px; }
-    .main       { padding: 36px 24px 72px; }
+    .grid { grid-template-columns: 1fr; }
+    .main { padding: 36px 24px 72px; }
     .hero-stats { gap: 24px; }
   }
 </style>
@@ -467,15 +179,13 @@ const stats = [
   const grid       = document.getElementById('projects-grid')!;
   const emptyState = document.getElementById('empty-state')!;
   const countLabel = document.getElementById('count-label')!;
-  const cards      = Array.from(grid.querySelectorAll<HTMLElement>('.card'));
+  const cards      = Array.from(grid.querySelectorAll<HTMLElement>('[data-category]'));
 
   function applyFilter(category: string) {
-    // Update button states
     filterBar.querySelectorAll<HTMLButtonElement>('.filter-btn').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset['category'] === category);
     });
 
-    // Show / hide cards
     let visible = 0;
     cards.forEach((card) => {
       const match = category === 'All' || card.dataset['category'] === category;
@@ -483,10 +193,7 @@ const stats = [
       if (match) visible++;
     });
 
-    // Update count
     countLabel.textContent = `${visible} proyecto${visible !== 1 ? 's' : ''}`;
-
-    // Empty state
     emptyState.style.display = visible === 0 ? 'flex' : 'none';
   }
 

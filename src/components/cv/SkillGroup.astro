@@ -1,0 +1,49 @@
+---
+/**
+ * SkillGroup
+ *
+ * Single skill category card: a mono category label + tag cloud of skills.
+ *
+ * @prop {string}   category - Category label (e.g. "Frontend")
+ * @prop {string[]} items    - Skill strings rendered as tag chips
+ */
+interface Props {
+  category: string;
+  items:    readonly string[];
+}
+const { category, items } = Astro.props;
+---
+
+<div class="skill-group">
+  <div class="skill-cat">{category}</div>
+  <div class="skill-tags">
+    {items.map((s) => <span class="stag">{s}</span>)}
+  </div>
+</div>
+
+<style>
+  .skill-group {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .skill-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue-d);
+    margin-bottom: 12px;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stag {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 9px;
+    background: var(--line-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink-2);
+  }
+</style>

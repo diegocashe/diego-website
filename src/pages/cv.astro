@@ -1,170 +1,24 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SiteNavbar from '../components/landing/SiteNavbar.astro';
-import SiteFooter from '../components/landing/SiteFooter.astro';
-
-const skills = [
-  {
-    category: 'Frontend',
-    items: ['React', 'Next.js', 'Astro', 'TypeScript', 'JavaScript ES6+', 'Tailwind CSS', 'Vue 2', 'QML', 'UI Architecture', 'SEO'],
-  },
-  {
-    category: 'Backend',
-    items: ['Node.js', 'Express.js', 'NestJS', 'PHP', 'Laravel', 'CakePHP', 'Strapi', 'RESTful APIs', 'MVC Architecture'],
-  },
-  {
-    category: 'Cloud & Infra',
-    items: ['AWS', 'Deployments', 'Proxies', 'VPNs', 'Server-Side Config'],
-  },
-  {
-    category: 'Data & AI',
-    items: ['Python', 'Pandas', 'Web Scraping', 'Data Pipelines', 'SQL', 'MySQL', 'Business Intelligence', 'NLP', 'Prolog'],
-  },
-  {
-    category: 'Architecture & Practices',
-    items: ['Software Architecture', 'Team Leadership', 'Scrum', 'Agile', 'Integration Testing', 'UI Component Testing', 'Security Guidelines', 'API Integration'],
-  },
-  {
-    category: 'Enterprise & Web3',
-    items: ['ERP Systems', 'CRM Systems', 'Inventory Management', 'Multi-Tenant Architecture', 'Web3', 'Crypto-Wallet Integration', 'Blockchain'],
-  },
-] as const;
-
-const experience = [
-  {
-    company: 'ConLuc Corp.',
-    location: 'México',
-    role: 'Frontend Lead',
-    period: 'Oct 2025 – Present',
-    current: true,
-    bullets: [
-      'Direct and manage the Frontend Department: core team of 6, scales to 12 cross-functional engineers during major module rollouts.',
-      'Architect modern web applications, define Definitions of Done (DoD), and establish development and security guidelines.',
-      'Partner with Backend Lead to design bulletproof API integration strategies that prevent breaking changes in production.',
-      'Enforce integration testing and atomic UI component testing for zero-downtime deployments.',
-    ],
-  },
-  {
-    company: 'TagWizz',
-    location: 'Ciudad de México, México',
-    role: 'Software Engineer Senior',
-    period: 'Apr 2024 – Jun 2026',
-    current: false,
-    bullets: [
-      'Architected a white-label LMS using React and NestJS — same core deployed under two distinct UI designs for corporate hospitality.',
-      'Co-developed an internal AI-driven video analysis tool for game QA; built a timeline-based video editor UI in QML + Python.',
-      'Maintained and upgraded legacy Laravel/PHP platforms: security fixes, framework migrations, multi-language SEO.',
-      'Managed and deployed front-end builds on AWS using proxies, VPNs, and server-side configurations.',
-    ],
-  },
-  {
-    company: 'Freelance',
-    location: 'Remote',
-    role: 'Full Stack Developer',
-    period: 'Jun 2019 – Jun 2026',
-    current: false,
-    bullets: [
-      'Architected and deployed ERP and inventory management systems for retail brands: multi-platform catalog sync, stock logic, warehouse zoning (CakePHP, Node.js, React).',
-      'Delivered web applications for SMEs using React, TypeScript, Next.js, Astro, Node.js/Express, PHP, and Strapi headless CMS.',
-      'Engineered automated data pipelines and web scraping tools in Python for multi-platform financial data and market intelligence.',
-      'Developed secure plugins and extensions for production admin software, expanding business logic without disrupting existing systems.',
-    ],
-  },
-  {
-    company: 'TagWizz',
-    location: 'México',
-    role: 'Software Engineer / Full-Stack Developer',
-    period: 'Jan 2023 – Apr 2024',
-    current: false,
-    bullets: [
-      'Integrated decentralized workflows and crypto-wallet connections into gaming platform front-ends, adhering to strict blockchain security standards.',
-      'Developed CRM and management views in Vue 2 for a legacy "Pay-for-Game" platform published on the App Store.',
-      'Built high-performance static and dynamic web applications for corporate clients with advanced SEO from scratch.',
-      'Deployed applications and configured AWS environments for optimal client-server communication.',
-    ],
-  },
-  {
-    company: 'TagWizz',
-    location: 'México',
-    role: 'Web Developer',
-    period: 'Jun 2022 – Jan 2023',
-    current: false,
-    bullets: [
-      'Engineered the front-end architecture for a high-traffic SMS RP data system processing and displaying video game analytics.',
-      'Partnered with the Backend Team to design and integrate scalable APIs using NestJS.',
-      'Coordinated task delivery in agile teams, aligning front-end components with back-end logic — accelerated internal promotion.',
-      'Built foundational AWS experience: microservice consumption and secure server access via VPN/proxies.',
-    ],
-  },
-  {
-    company: 'Carbones del Zulia S.A. (CARBOZULIA)',
-    location: 'Venezuela',
-    role: 'Software Development Engineer',
-    period: 'Jan 2022 – Jun 2022',
-    current: false,
-    bullets: [
-      'Designed and deployed a custom internal web app in CakePHP to automate large-scale technological asset inventory management.',
-      'Streamlined corporate workflows via high-performance web features, reducing manual overhead and improving data tracking accuracy.',
-      'Applied MVC architecture to upgrade internal platforms — secure, stable, and maintainable codebases.',
-    ],
-  },
-  {
-    company: 'Disdibuca',
-    location: 'Venezuela',
-    role: 'IT Manager',
-    period: 'Jan 2018 – Dec 2018',
-    current: false,
-    bullets: [
-      'Administered and optimized relational SQL databases for high availability and integrity across core corporate environments.',
-      'Maintained critical workstations and infrastructure for Finance, Logistics, and Operations departments.',
-      'Led internal digital transformation: evaluated hardware/software needs, upgraded legacy systems, implemented modern solutions.',
-    ],
-  },
-] as const;
-
-const education = [
-  {
-    institution: 'Universidad Dr. José Gregorio Hernández',
-    degree: "Master's Degree — Gerencia de Telecomunicaciones",
-    focus: 'Project Management · AI in Agile Development (thesis)',
-    location: 'Maracaibo, Venezuela',
-    period: 'Jul 2023 – Present',
-    current: true,
-  },
-  {
-    institution: 'Universidad Dr. José Gregorio Hernández',
-    degree: 'B.S. — Ingeniería de Sistemas',
-    focus: 'Systems Engineering',
-    location: 'Maracaibo, Venezuela',
-    period: 'May 2017 – Apr 2022',
-    current: false,
-  },
-] as const;
-
-const publications = [
-  {
-    title: 'Artificial Intelligence in the Software Development Life Cycle',
-    authors: 'Diego Armando Castillo Hernandez, José Andrés Hernandez Chirinos',
-    abstract: 'Demonstrates that tools like GitHub Copilot and ChatGPT can accelerate coding speed by up to 55%, reduce developer mental fatigue, and automate repetitive tasks — while concluding AI still requires human oversight for complex problems.',
-  },
-  {
-    title: 'Industry 4.0 vs Industry 5.0: Emerging Technologies in the Digital Transformation',
-    authors: 'Diego Armando Castillo Hernandez, José Andrés Hernandez Chirinos',
-    abstract: 'Descriptive analysis of the transition from Industry 4.0 to Industry 5.0, exploring how collaborative robots, sustainability, and human-centered design expand — rather than replace — the automation achievements of the previous era.',
-  },
-] as const;
+import Layout          from '../layouts/Layout.astro';
+import SiteNavbar      from '../components/landing/SiteNavbar.astro';
+import SiteFooter      from '../components/landing/SiteFooter.astro';
+import SkillGroup      from '../components/cv/SkillGroup.astro';
+import TimelineItem    from '../components/cv/TimelineItem.astro';
+import PublicationCard from '../components/cv/PublicationCard.astro';
+import { site }        from '../data/site';
+import { skills, experience, education, publications } from '../data/cv';
 ---
 
 <Layout title="CV · Diego Castillo">
   <SiteNavbar />
 
-  <!-- Hero -->
-  <header class="cv-hero">
-    <div class="inner">
+  <!-- Hero (unique two-column layout — not using PageHero) -->
+  <header class="page-header-dark cv-hero">
+    <div class="cv-inner">
       <div class="hero-left">
-        <div class="eyebrow">Curriculum Vitae</div>
-        <h1>Diego Castillo<span class="dot">.</span></h1>
-        <p class="role">Lead Frontend &amp; Full-Stack Developer</p>
+        <div class="eyebrow-muted">Curriculum Vitae</div>
+        <h1>{site.name}<span class="dot">.</span></h1>
+        <p class="role">{site.role}</p>
         <p class="summary">
           7+ years architecting high-performance web applications and leading technical teams.
           Scaled engineering departments up to 15 developers. Currently researching
@@ -175,134 +29,82 @@ const publications = [
       <div class="contact-card">
         <div class="contact-label">Contacto</div>
         <ul class="contact-list">
-          <li>
-            <span class="ci">@</span>
-            <a href="mailto:diegocashe17@gmail.com">diegocashe17@gmail.com</a>
-          </li>
-          <li>
-            <span class="ci">☎</span>
-            <span>+58 414 363 5330</span>
-          </li>
-          <li>
-            <span class="ci">⌖</span>
-            <span>Venezuela</span>
-          </li>
+          <li><span class="ci">@</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><span class="ci">☎</span><span>{site.phone}</span></li>
+          <li><span class="ci">⌖</span><span>{site.location}</span></li>
           <li>
             <span class="ci">in</span>
-            <a href="https://www.linkedin.com/in/diegocashe" target="_blank" rel="noopener">
+            <a href={site.linkedin} target="_blank" rel="noopener">
               linkedin.com/in/diegocashe
             </a>
           </li>
         </ul>
-
         <div class="lang-row">
           <span class="lang-pill">🇪🇸 Spanish — Native</span>
           <span class="lang-pill">🇺🇸 English — Intermediate</span>
         </div>
-
-        <a href="#" class="download-btn" onclick="window.print();return false;">
-          ↓ Download PDF
-        </a>
+        <button class="download-btn" id="print-btn">↓ Download PDF</button>
       </div>
     </div>
   </header>
 
   <main class="cv-main">
-    <div class="inner">
+    <div class="page-inner cv-sections">
 
-      <!-- Skills -->
-      <section class="cv-section">
+      <!-- 01 Skills -->
+      <section>
         <h2 class="sec-title"><span class="num">01</span> Skills</h2>
         <div class="skills-grid">
-          {skills.map((g) => (
-            <div class="skill-group">
-              <div class="skill-cat">{g.category}</div>
-              <div class="skill-tags">
-                {g.items.map((s) => <span class="stag">{s}</span>)}
-              </div>
-            </div>
-          ))}
+          {skills.map((g) => <SkillGroup category={g.category} items={g.items} />)}
         </div>
       </section>
 
-      <!-- Experience Timeline -->
-      <section class="cv-section">
+      <!-- 02 Experience -->
+      <section>
         <h2 class="sec-title"><span class="num">02</span> Experience</h2>
         <div class="timeline">
           {experience.map((job, i) => (
-            <div class:list={['tl-item', { current: job.current }]}>
-              <div class="tl-marker">
-                <div class="tl-dot"></div>
-                {i < experience.length - 1 && <div class="tl-line"></div>}
-              </div>
-              <div class="tl-body">
-                <div class="tl-header">
-                  <div class="tl-left">
-                    <div class="tl-company">
-                      {job.company}
-                      <span class="tl-loc">· {job.location}</span>
-                    </div>
-                    <div class="tl-role">{job.role}</div>
-                  </div>
-                  <div class:list={['tl-period', { current: job.current }]}>
-                    {job.current && <span class="live-dot"></span>}
-                    {job.period}
-                  </div>
-                </div>
-                <ul class="tl-bullets">
-                  {job.bullets.map((b) => <li>{b}</li>)}
-                </ul>
-              </div>
-            </div>
+            <TimelineItem
+              company={job.company}
+              location={job.location}
+              role={job.role}
+              period={job.period}
+              current={job.current}
+              last={i === experience.length - 1}
+              bullets={job.bullets}
+            />
           ))}
         </div>
       </section>
 
-      <!-- Education Timeline -->
-      <section class="cv-section">
+      <!-- 03 Education -->
+      <section>
         <h2 class="sec-title"><span class="num">03</span> Education</h2>
         <div class="timeline">
           {education.map((edu, i) => (
-            <div class:list={['tl-item', { current: edu.current }]}>
-              <div class="tl-marker">
-                <div class="tl-dot"></div>
-                {i < education.length - 1 && <div class="tl-line"></div>}
-              </div>
-              <div class="tl-body">
-                <div class="tl-header">
-                  <div class="tl-left">
-                    <div class="tl-company">
-                      {edu.institution}
-                      <span class="tl-loc">· {edu.location}</span>
-                    </div>
-                    <div class="tl-role">{edu.degree}</div>
-                    <div class="tl-focus">{edu.focus}</div>
-                  </div>
-                  <div class:list={['tl-period', { current: edu.current }]}>
-                    {edu.current && <span class="live-dot"></span>}
-                    {edu.period}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <TimelineItem
+              company={edu.institution}
+              location={edu.location}
+              role={edu.degree}
+              focus={edu.focus}
+              period={edu.period}
+              current={edu.current}
+              last={i === education.length - 1}
+            />
           ))}
         </div>
       </section>
 
-      <!-- Bottom row: Certifications + Achievements + Publications -->
-      <section class="cv-section">
+      <!-- 04 Highlights -->
+      <section>
         <h2 class="sec-title"><span class="num">04</span> Highlights</h2>
         <div class="highlights-grid">
-
-          <!-- Certifications -->
           <div class="hl-card">
             <div class="hl-label">Certification</div>
             <p class="hl-text">
               Introducción al Desarrollo de Sistemas Expertos y Lenguaje de Programación PROLOG
             </p>
           </div>
-
-          <!-- Achievement -->
           <div class="hl-card achievement">
             <div class="hl-label">Achievement</div>
             <div class="award-badge">🥉 3rd Place</div>
@@ -311,20 +113,15 @@ const publications = [
               sales and management software.
             </p>
           </div>
-
         </div>
       </section>
 
-      <!-- Publications -->
-      <section class="cv-section">
+      <!-- 05 Publications -->
+      <section>
         <h2 class="sec-title"><span class="num">05</span> Publications</h2>
         <div class="pub-list">
           {publications.map((p) => (
-            <div class="pub-card">
-              <div class="pub-title">{p.title}</div>
-              <div class="pub-authors">{p.authors}</div>
-              <p class="pub-abstract">{p.abstract}</p>
-            </div>
+            <PublicationCard title={p.title} authors={p.authors} abstract={p.abstract} />
           ))}
         </div>
       </section>
@@ -336,30 +133,14 @@ const publications = [
 </Layout>
 
 <style>
-  /* ── Hero ── */
-  .cv-hero {
-    background: var(--ink);
-    padding: 64px 40px 72px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .inner {
-    max-width: 1100px;
+  /* ── CV hero overrides (two-column, wider container) ── */
+  .cv-inner {
+    max-width: var(--max-w);
     margin: 0 auto;
-  }
-  .cv-hero .inner {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 48px;
     align-items: start;
-  }
-
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    margin-bottom: 14px;
   }
   h1 {
     font-family: 'Space Grotesk', sans-serif;
@@ -367,11 +148,11 @@ const publications = [
     font-size: clamp(32px, 4vw, 48px);
     letter-spacing: -0.03em;
     color: #fff;
-    margin: 0 0 6px;
+    margin: 14px 0 6px;
     line-height: 1;
   }
-  .dot { color: var(--blue); }
-  .role {
+  .dot   { color: var(--blue); }
+  .role  {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     letter-spacing: 0.2em;
@@ -435,19 +216,15 @@ const publications = [
     transition: color 0.15s;
   }
   .contact-list a:hover { color: #fff; }
-
-  .lang-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .lang-pill {
+  .lang-row   { display: flex; flex-direction: column; gap: 6px; }
+  .lang-pill  {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
     color: rgba(255,255,255,0.35);
   }
-
   .download-btn {
+    appearance: none;
+    border: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -459,26 +236,16 @@ const publications = [
     font-size: 13px;
     padding: 10px 16px;
     border-radius: 10px;
-    text-decoration: none;
-    transition: background 0.15s;
-    border: none;
     cursor: pointer;
+    transition: background 0.15s;
   }
   .download-btn:hover { background: var(--blue-d); }
 
-  /* ── Main content ── */
-  .cv-main {
-    background: var(--bg);
-    padding: 64px 40px 96px;
-  }
-  .cv-main .inner {
-    display: flex;
-    flex-direction: column;
-    gap: 64px;
-  }
+  /* ── Main ── */
+  .cv-main { background: var(--bg); padding: 64px 40px 96px; }
+  .cv-sections { display: flex; flex-direction: column; gap: 64px; }
 
   /* ── Section title ── */
-  .cv-section {}
   .sec-title {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
@@ -491,183 +258,14 @@ const publications = [
     align-items: center;
     gap: 10px;
   }
-  .sec-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-  .num {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--blue);
-  }
+  .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  .num { font-family: 'JetBrains Mono', monospace; color: var(--blue); }
 
-  /* ── Skills ── */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  .skill-group {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 18px 20px;
-  }
-  .skill-cat {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--blue-d);
-    margin-bottom: 12px;
-  }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .stag {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 9px;
-    background: var(--line-2);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    color: var(--ink-2);
-  }
-
-  /* ── Timeline ── */
-  .timeline { display: flex; flex-direction: column; }
-
-  .tl-item {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 0 20px;
-  }
-  .tl-item:not(:last-child) { padding-bottom: 0; }
-
-  /* Marker column */
-  .tl-marker {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 4px;
-  }
-  .tl-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--line);
-    border: 2px solid var(--line);
-    flex-shrink: 0;
-    z-index: 1;
-    transition: background 0.2s;
-  }
-  .tl-item.current .tl-dot {
-    background: var(--blue);
-    border-color: var(--blue);
-    box-shadow: 0 0 0 4px var(--tint);
-  }
-  .tl-line {
-    width: 2px;
-    flex: 1;
-    background: var(--line);
-    margin-top: 4px;
-    min-height: 20px;
-  }
-
-  /* Body column */
-  .tl-body {
-    padding-bottom: 36px;
-  }
-  .tl-item:last-child .tl-body { padding-bottom: 0; }
-
-  .tl-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .tl-company {
-    font-weight: 800;
-    font-size: 15px;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .tl-loc {
-    font-weight: 500;
-    color: var(--ink-3);
-    font-size: 13px;
-  }
-  .tl-role {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    color: var(--blue-d);
-    letter-spacing: 0.04em;
-    margin-top: 3px;
-  }
-  .tl-focus {
-    font-size: 12.5px;
-    color: var(--ink-3);
-    margin-top: 3px;
-  }
-
-  .tl-period {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--ink-3);
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding-top: 2px;
-    flex-shrink: 0;
-  }
-  .tl-period.current { color: var(--ok); }
-
-  .live-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--ok);
-    flex-shrink: 0;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0   rgba(31,138,91,0.45); }
-    70%  { box-shadow: 0 0 0 6px rgba(31,138,91,0);    }
-    100% { box-shadow: 0 0 0 0   rgba(31,138,91,0);    }
-  }
-
-  .tl-bullets {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .tl-bullets li {
-    font-size: 13.5px;
-    line-height: 1.55;
-    color: var(--ink-2);
-    padding-left: 14px;
-    position: relative;
-  }
-  .tl-bullets li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--blue);
-    font-size: 11px;
-    top: 2px;
-  }
+  /* ── Skills grid ── */
+  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
   /* ── Highlights ── */
-  .highlights-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
+  .highlights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .hl-card {
     background: var(--paper);
     border: 1px solid var(--line);
@@ -686,66 +284,37 @@ const publications = [
     color: var(--ink-3);
   }
   .hl-card.achievement .hl-label { color: var(--blue-d); }
-  .award-badge {
-    font-size: 22px;
-    letter-spacing: -0.01em;
-    font-weight: 800;
-    color: var(--ink);
-  }
-  .hl-text { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+  .award-badge { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); }
+  .hl-text  { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 0; }
 
   /* ── Publications ── */
   .pub-list { display: flex; flex-direction: column; gap: 16px; }
-  .pub-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 22px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .pub-title {
-    font-weight: 700;
-    font-size: 14.5px;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .pub-authors {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    color: var(--blue-d);
-    letter-spacing: 0.04em;
-  }
-  .pub-abstract {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--ink-3);
-    margin: 4px 0 0;
-  }
+
+  /* ── Timeline container ── */
+  .timeline { display: flex; flex-direction: column; }
 
   /* ── Responsive ── */
   @media (max-width: 900px) {
-    .cv-hero .inner { grid-template-columns: 1fr; }
+    .cv-inner       { grid-template-columns: 1fr; }
     .contact-card   { min-width: unset; }
     .skills-grid    { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 640px) {
-    .cv-hero { padding: 48px 24px 56px; }
-    .cv-main { padding: 48px 24px 72px; }
-    .skills-grid     { grid-template-columns: 1fr; }
-    .highlights-grid { grid-template-columns: 1fr; }
-    .tl-period       { width: 100%; }
+    .cv-main        { padding: 48px 24px 72px; }
+    .skills-grid    { grid-template-columns: 1fr; }
+    .highlights-grid{ grid-template-columns: 1fr; }
   }
 
-  /* ── Print styles ── */
+  /* ── Print ── */
   @media print {
     :global(header.navbar), :global(footer) { display: none !important; }
     .cv-hero   { background: #fff !important; padding: 24px 0 20px; }
     .cv-main   { padding: 20px 0; }
     h1, .role, .summary, .contact-list li, .contact-list a { color: #000 !important; }
     .download-btn { display: none !important; }
-    .tl-body   { page-break-inside: avoid; }
-    .pub-card, .hl-card { page-break-inside: avoid; }
   }
 </style>
+
+<script>
+  document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+</script>

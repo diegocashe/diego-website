@@ -1,5 +1,6 @@
 ---
 import Button from '../ds/atoms/Button.astro';
+import { navLinks } from '../../data/site';
 ---
 
 <header class="navbar">
@@ -15,14 +16,11 @@ import Button from '../ds/atoms/Button.astro';
     </a>
 
     <nav aria-label="Principal">
-      <a href="/projects">Proyectos</a>
-      <a href="/blog">Blog</a>
-      <a href="/cv">CV</a>
-      <a href="/#contacto">Contacto</a>
+      {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
 
     <Button variant="ink" size="sm">
-      <a href="#contacto" class="cta-link">Hablemos</a>
+      <a href="/#contacto" class="cta-link">Hablemos</a>
     </Button>
   </div>
 </header>

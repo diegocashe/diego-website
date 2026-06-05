@@ -1,9 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import Layout     from '../../layouts/Layout.astro';
 import SiteNavbar from '../../components/landing/SiteNavbar.astro';
 import SiteFooter from '../../components/landing/SiteFooter.astro';
 import PostCard   from '../../components/blog/PostCard.astro';
+import PageHero   from '../../components/shared/PageHero.astro';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts
@@ -16,14 +17,11 @@ const [featured, ...rest] = posts;
 <Layout title="Blog · Diego Castillo">
   <SiteNavbar />
 
-  <!-- Page header -->
-  <header class="page-head">
-    <div class="inner">
-      <div class="eyebrow">Notas & tutoriales</div>
-      <h1>Blog</h1>
-      <p>Escribo sobre React, Node.js, PostgreSQL y el trabajo diario de construir producto.</p>
-    </div>
-  </header>
+  <PageHero
+    eyebrow="Notas & tutoriales"
+    title="Blog"
+    description="Escribo sobre React, Node.js, PostgreSQL y el trabajo diario de construir producto."
+  />
 
   <main class="main">
     <div class="inner">
@@ -78,40 +76,6 @@ const [featured, ...rest] = posts;
 </Layout>
 
 <style>
-  /* ── Page header ── */
-  .page-head {
-    background: var(--ink);
-    padding: 64px 40px 72px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .inner {
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
-    margin-bottom: 14px;
-  }
-  h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: clamp(32px, 5vw, 52px);
-    letter-spacing: -0.03em;
-    color: #fff;
-    margin: 0 0 14px;
-  }
-  .page-head p {
-    font-size: 16px;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.5);
-    max-width: 480px;
-    margin: 0;
-  }
-
   /* ── Main content ── */
   .main {
     background: var(--bg);

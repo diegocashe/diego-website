@@ -37,8 +37,8 @@ const dateStr = fmt.format(pubDate);
   <SiteNavbar />
 
   <!-- Post header -->
-  <header class="post-header">
-    <div class="inner">
+  <header class="page-header-dark">
+    <div class="page-inner-prose" style="display:flex;flex-direction:column;gap:16px;">
       <a href="/blog" class="back">← Blog</a>
 
       <div class="tag-row">
@@ -71,19 +71,7 @@ const dateStr = fmt.format(pubDate);
 </Layout>
 
 <style>
-  /* ── Header ── */
-  .post-header {
-    background: var(--ink);
-    padding: 64px 40px 72px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .inner {
-    max-width: 720px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  /* header uses global .page-header-dark + .page-inner-prose */
 
   .back {
     font-family: 'JetBrains Mono', monospace;
