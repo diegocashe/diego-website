@@ -3,28 +3,25 @@
  * BlogPostLayout
  *
  * Full-page wrapper for individual blog posts.
- * Accepts post frontmatter as props and renders:
- *   - SiteNavbar
- *   - Post header (dark bg, title, meta, tags)
- *   - Article content via <slot /> with prose typography
- *   - Back-to-blog link + SiteFooter
+ * Passes article-specific meta (pubDate, tags, ogType='article') through
+ * to BaseLayout so every post gets correct Open Graph + JSON-LD markup.
  *
  * @prop {string}   title       - Post headline
- * @prop {string}   description - Used in <meta> description
+ * @prop {string}   description - Meta description (also shown in header)
  * @prop {Date}     pubDate     - Publication date
- * @prop {string[]} tags        - Topic tags
+ * @prop {string[]} tags        - Topic tags (OG + displayed)
  * @prop {number}   readTime    - Minutes
  */
-import Layout from './Layout.astro';
+import BaseLayout from './BaseLayout.astro';
 import SiteNavbar from '../components/landing/SiteNavbar.astro';
 import SiteFooter from '../components/landing/SiteFooter.astro';
 
 interface Props {
-  title: string;
+  title:       string;
   description: string;
-  pubDate: Date;
-  tags: string[];
-  readTime: number;
+  pubDate:     Date;
+  tags:        string[];
+  readTime:    number;
 }
 
 const { title, description, pubDate, tags, readTime } = Astro.props;
@@ -33,12 +30,18 @@ const fmt = new Intl.DateTimeFormat('es-MX', { day: '2-digit', month: 'long', ye
 const dateStr = fmt.format(pubDate);
 ---
 
-<Layout title={`${title} · Diego Castillo`}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  pubDate={pubDate}
+  tags={tags}
+>
   <SiteNavbar />
 
   <!-- Post header -->
   <header class="page-header-dark">
-    <div class="page-inner-prose" style="display:flex;flex-direction:column;gap:16px;">
+    <div class="page-inner-prose post-inner">
       <a href="/blog" class="back">← Blog</a>
 
       <div class="tag-row">
@@ -56,9 +59,9 @@ const dateStr = fmt.format(pubDate);
     </div>
   </header>
 
-  <!-- Article content -->
-  <main class="article-wrap">
-    <article class="prose">
+  <!-- Article content — id="main-content" is the skip-link target -->
+  <main id="main-content" class="article-wrap">
+    <article class="prose" aria-label={title}>
       <slot />
     </article>
 
@@ -68,10 +71,15 @@ const dateStr = fmt.format(pubDate);
   </main>
 
   <SiteFooter />
-</Layout>
+</BaseLayout>
 
 <style>
   /* header uses global .page-header-dark + .page-inner-prose */
+  .post-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 
   .back {
     font-family: 'JetBrains Mono', monospace;
@@ -123,16 +131,14 @@ const dateStr = fmt.format(pubDate);
   }
   .sep { opacity: 0.4; }
 
-  /* ── Article content ── */
   .article-wrap {
-    max-width: 720px;
+    max-width: var(--max-w-prose);
     margin: 0 auto;
     padding: 64px 40px 80px;
   }
 
   /* .prose typography lives in global.css */
 
-  /* ── Post footer ── */
   .post-footer {
     margin-top: 56px;
     padding-top: 24px;
@@ -149,7 +155,6 @@ const dateStr = fmt.format(pubDate);
   .back-link:hover { color: var(--blue); }
 
   @media (max-width: 640px) {
-    .post-header  { padding: 48px 24px 56px; }
     .article-wrap { padding: 48px 24px 64px; }
   }
 </style>

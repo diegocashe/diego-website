@@ -1,31 +1,26 @@
 ---
-import '../styles/global.css';
+/**
+ * Layout
+ *
+ * Thin wrapper around BaseLayout for standard pages (index, cv, projects,
+ * design-system). Passes through the most commonly needed SEO props while
+ * keeping per-page imports minimal.
+ *
+ * For blog posts use BlogPostLayout directly — it passes article-specific
+ * props (pubDate, tags, ogType) that this wrapper omits.
+ */
+import BaseLayout from './BaseLayout.astro';
 
 interface Props {
-  title?: string;
-  bodyClass?: string;
+  title?:       string;
+  description?: string;
+  ogImage?:     string;
+  noindex?:     boolean;
+  bodyClass?:   string;
 }
-const { title = 'Diego Castillo', bodyClass } = Astro.props;
+const { title = 'Diego Castillo · Lead Frontend & Full-Stack Developer', ...rest } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class={bodyClass}>
-    <slot />
-  </body>
-</html>
-
+<BaseLayout title={title} {...rest}>
+  <slot />
+</BaseLayout>

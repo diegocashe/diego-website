@@ -9,7 +9,10 @@ import { site }        from '../data/site';
 import { skills, experience, education, publications } from '../data/cv';
 ---
 
-<Layout title="CV · Diego Castillo">
+<Layout
+  title="CV · Diego Castillo"
+  description="Curriculum Vitae de Diego Castillo — Lead Frontend & Full-Stack Developer con 7+ años de experiencia en React, Node.js, TypeScript, AWS y liderazgo técnico."
+>
   <SiteNavbar />
 
   <!-- Hero (unique two-column layout — not using PageHero) -->
@@ -48,7 +51,7 @@ import { skills, experience, education, publications } from '../data/cv';
     </div>
   </header>
 
-  <main class="cv-main">
+  <main id="main-content" class="cv-main">
     <div class="page-inner cv-sections">
 
       <!-- 01 Skills -->

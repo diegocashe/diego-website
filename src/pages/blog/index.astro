@@ -14,7 +14,10 @@ const posts = allPosts
 const [featured, ...rest] = posts;
 ---
 
-<Layout title="Blog · Diego Castillo">
+<Layout
+  title="Blog · Diego Castillo"
+  description="Artículos sobre React, Node.js, PostgreSQL, arquitectura de software y el trabajo diario de construir producto."
+>
   <SiteNavbar />
 
   <PageHero
@@ -23,7 +26,7 @@ const [featured, ...rest] = posts;
     description="Escribo sobre React, Node.js, PostgreSQL y el trabajo diario de construir producto."
   />
 
-  <main class="main">
+  <main id="main-content" class="main">
     <div class="inner">
 
       <!-- Empty state -->

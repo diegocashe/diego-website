@@ -1,0 +1,213 @@
+---
+/**
+ * BaseLayout
+ *
+ * Single source of truth for <head> management, skip link, and
+ * ViewTransitions focus/announcement handling.
+ *
+ * Every page in this site should render through this layout —
+ * either directly or via Layout.astro / BlogPostLayout.astro.
+ *
+ * SEO props
+ * @prop {string}  title          - Page title (appended with " · Diego Castillo")
+ * @prop {string}  [description]  - Meta description (150-160 chars ideal)
+ * @prop {string}  [ogImage]      - Absolute URL for OG image (1200×630px)
+ * @prop {'website'|'article'} [ogType='website']
+ * @prop {string}  [canonicalUrl] - Override auto-detected canonical
+ * @prop {boolean} [noindex]      - Opt out of indexing (drafts, private pages)
+ *
+ * Article-specific (ogType='article')
+ * @prop {Date}    [pubDate]      - ISO publish date for article schema
+ * @prop {string[]} [tags]        - Keywords for article meta
+ *
+ * Layout
+ * @prop {string}  [bodyClass]    - Extra class on <body>
+ */
+import { ClientRouter } from 'astro:transitions';
+import { site, seo }       from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  title:        string;
+  description?: string;
+  ogImage?:     string;
+  ogType?:      'website' | 'article';
+  canonicalUrl?: string;
+  noindex?:     boolean;
+  pubDate?:     Date;
+  tags?:        string[];
+  bodyClass?:   string;
+}
+
+const {
+  title,
+  description  = seo.defaultDesc,
+  ogImage      = seo.defaultImage,
+  ogType       = 'website',
+  canonicalUrl,
+  noindex      = false,
+  pubDate,
+  tags         = [],
+  bodyClass,
+} = Astro.props;
+
+const pageTitle    = title === seo.defaultTitle ? title : `${title} · Diego Castillo`;
+const canonical    = canonicalUrl ?? new URL(Astro.url.pathname, seo.siteUrl).href;
+const ogImageAbsolute = ogImage.startsWith('http') ? ogImage : new URL(ogImage, seo.siteUrl).href;
+
+// JSON-LD: Person (all pages) + WebSite (homepage) + Article (blog posts)
+const personSchema = {
+  '@type':       'Person',
+  name:          site.name,
+  jobTitle:      site.role,
+  url:           seo.siteUrl,
+  email:         site.email,
+  sameAs: [site.linkedin, site.github, site.twitter],
+};
+
+const webSiteSchema = {
+  '@context': 'https://schema.org',
+  '@type':    'WebSite',
+  name:       site.name,
+  url:        seo.siteUrl,
+  author:     personSchema,
+};
+
+const articleSchema = ogType === 'article' && pubDate ? {
+  '@context':       'https://schema.org',
+  '@type':          'BlogPosting',
+  headline:         title,
+  description,
+  url:              canonical,
+  datePublished:    pubDate.toISOString(),
+  author:           personSchema,
+  image:            ogImageAbsolute,
+  keywords:         tags.join(', '),
+  inLanguage:       'es',
+} : null;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ── Primary meta ── -->
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    }
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content={seo.themeColor} />
+
+    <!-- ── Open Graph ── -->
+    <meta property="og:type"        content={ogType} />
+    <meta property="og:title"       content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url"         content={canonical} />
+    <meta property="og:image"       content={ogImageAbsolute} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name"   content={site.name} />
+    <meta property="og:locale"      content={seo.locale} />
+    {ogType === 'article' && pubDate && (
+      <meta property="article:published_time" content={pubDate.toISOString()} />
+    )}
+    {tags.map((t) => <meta property="article:tag" content={t} />)}
+
+    <!-- ── Twitter / X Card ── -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content={site.twitterHandle} />
+    <meta name="twitter:creator"     content={site.twitterHandle} />
+    <meta name="twitter:title"       content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={ogImageAbsolute} />
+
+    <!-- ── Favicons ── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- ── Fonts ── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ── Generator (Astro) ── -->
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- ── JSON-LD structured data ── -->
+    {ogType === 'website' && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteSchema)} />
+    )}
+    {articleSchema && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    )}
+
+    <!-- ── View Transitions (Astro v5+ ClientRouter) ── -->
+    <ClientRouter />
+  </head>
+
+  <body class={bodyClass}>
+    <!--
+      Skip link: visually hidden, appears on keyboard focus.
+      WCAG 2.4.1 — required when nav appears before main content on every page.
+    -->
+    <a href="#main-content" class="skip-link">Ir al contenido principal</a>
+
+    <!--
+      Route-change announcer for screen readers.
+      Updated by the astro:after-swap listener below.
+      aria-live="assertive" so VoiceOver/NVDA interrupt to read it.
+    -->
+    <div
+      id="route-announcer"
+      aria-live="assertive"
+      aria-atomic="true"
+      role="status"
+    ></div>
+
+    <slot />
+  </body>
+</html>
+
+<!--
+  Focus management + screen reader announcements for View Transitions.
+  Runs after every client-side navigation (not on initial load).
+-->
+<script>
+  document.addEventListener('astro:after-swap', () => {
+    // 1. Announce the new page title to screen readers
+    const announcer = document.getElementById('route-announcer');
+    if (announcer) {
+      // Brief timeout forces a DOM mutation so the live region fires
+      announcer.textContent = '';
+      setTimeout(() => {
+        announcer.textContent = `Página cargada: ${document.title}`;
+      }, 50);
+    }
+
+    // 2. Move focus to #main-content (or <main> as fallback)
+    //    so keyboard users don't get stranded at the top of the old DOM.
+    const main = document.getElementById('main-content') ?? document.querySelector('main');
+    if (main) {
+      // tabindex="-1" lets us programmatically focus a non-interactive element
+      if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
+      main.focus({ preventScroll: false });
+    }
+  });
+
+  // 3. On initial load, ensure <main> is also focusable for the skip link
+  document.addEventListener('DOMContentLoaded', () => {
+    const main = document.getElementById('main-content') ?? document.querySelector('main');
+    if (main && !main.hasAttribute('tabindex')) {
+      main.setAttribute('tabindex', '-1');
+    }
+  });
+</script>

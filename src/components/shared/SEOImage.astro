@@ -1,0 +1,91 @@
+---
+/**
+ * SEOImage
+ *
+ * Wraps Astro's <Image /> to enforce alt-text discipline at the type level.
+ * TypeScript makes it impossible to use this component without making a
+ * deliberate, explicit choice about whether the image is informative or
+ * decorative — no accidental empty alt strings.
+ *
+ * ── Informative image (default) ──────────────────────────────────────
+ * Requires a non-empty `alt` string describing the image content.
+ * Astro's <Image /> outputs width/height attributes preventing CLS.
+ *
+ *   <SEOImage src={photo} alt="Diego presenting at JSConf Medellín 2024" />
+ *
+ * ── Decorative image ─────────────────────────────────────────────────
+ * Pass `decorative={true}`. alt is set to "" and role="presentation"
+ * is added so screen readers skip it entirely. The `alt` prop is
+ * intentionally omitted from the type when decorative=true.
+ *
+ *   <SEOImage src={bgTexture} decorative />
+ *
+ * ── Choosing between them ────────────────────────────────────────────
+ * Ask: "If this image were removed, would a sighted user lose information?"
+ *   Yes → informative, write a descriptive alt.
+ *   No  → decorative, use decorative={true}.
+ *
+ * Icons next to labeled text → decorative (label already conveys meaning).
+ * Profile photos, screenshots, charts → informative.
+ * Pure background textures, gradients → decorative.
+ *
+ * @prop {ImageMetadata} src
+ * @prop {string}        alt        - Required when decorative is false/absent
+ * @prop {true}          [decorative] - Marks image as presentational
+ * @prop {number}        [width]    - Override inferred width
+ * @prop {number}        [height]   - Override inferred height
+ * @prop {string}        [class]
+ * @prop {'lazy'|'eager'} [loading='lazy']
+ * @prop {'auto'|'high'|'low'} [fetchpriority='auto']
+ *   Set fetchpriority="high" for LCP images (hero, above-the-fold).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+type InformativeProps = {
+  src:           ImageMetadata;
+  alt:           string;          // non-empty description required
+  decorative?:   false;
+  width?:        number;
+  height?:       number;
+  class?:        string;
+  loading?:      'lazy' | 'eager';
+  fetchpriority?: 'auto' | 'high' | 'low';
+};
+
+type DecorativeProps = {
+  src:           ImageMetadata;
+  decorative:    true;
+  alt?:          never;           // alt is forbidden — component sets "" automatically
+  width?:        number;
+  height?:       number;
+  class?:        string;
+  loading?:      'lazy' | 'eager';
+  fetchpriority?: 'auto' | 'high' | 'low';
+};
+
+type Props = InformativeProps | DecorativeProps;
+
+const {
+  src,
+  decorative   = false,
+  width,
+  height,
+  class: cls,
+  loading      = 'lazy',
+  fetchpriority = 'auto',
+} = Astro.props as Props;
+
+const alt = decorative ? '' : (Astro.props as InformativeProps).alt;
+---
+
+<Image
+  src={src}
+  alt={alt}
+  width={width}
+  height={height}
+  class={cls}
+  loading={loading}
+  fetchpriority={fetchpriority}
+  {...decorative ? { role: 'presentation' } : {}}
+/>
