@@ -1,0 +1,83 @@
+# ============================================================
+# .htaccess — Apache shared hosting
+# diegocastillo.dev
+# ============================================================
+# This file is copied verbatim from public/.htaccess to dist/.htaccess
+# by Astro's build step. Upload it along with all other dist/ contents.
+# ============================================================
+
+# ── HTTPS redirect ────────────────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ── Security headers ──────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+
+    # Content-Security-Policy
+    # script-src strict-dynamic: trusts scripts loaded by Astro's bundled entry
+    # point without listing every hash manually.
+    # style-src unsafe-inline: required for Google Fonts injected <style> tag.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'strict-dynamic'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+
+    # Force HTTPS for 1 year — remove preload if domain isn't on the preload list yet
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking (reinforced by frame-ancestors in CSP)
+    Header always set X-Frame-Options "DENY"
+
+    # Limit referrer info sent to third-party sites
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Disable browser features this site doesn't use
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+    # Strip server fingerprinting headers
+    Header unset X-Powered-By
+    Header unset Server
+
+</IfModule>
+
+# ── Cache control ─────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # HTML pages — revalidate every time (content can change on deploy)
+    ExpiresByType text/html                 "access plus 0 seconds"
+
+    # Astro outputs content-hashed filenames under _astro/ — safe to cache forever
+    <FilesMatch "\.(css|js|mjs)$">
+        ExpiresDefault "access plus 1 year"
+        Header append Cache-Control "immutable"
+    </FilesMatch>
+
+    # Images and fonts
+    ExpiresByType image/webp                "access plus 1 year"
+    ExpiresByType image/svg+xml             "access plus 1 year"
+    ExpiresByType image/png                 "access plus 1 year"
+    ExpiresByType image/jpeg                "access plus 1 year"
+    ExpiresByType font/woff2                "access plus 1 year"
+    ExpiresByType application/font-woff2    "access plus 1 year"
+</IfModule>
+
+# ── Gzip / Brotli compression ─────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE \
+        text/html \
+        text/css \
+        application/javascript \
+        application/json \
+        image/svg+xml \
+        font/woff2
+</IfModule>
+
+# ── Directory listing ─────────────────────────────────────────────────────
+Options -Indexes
+
+# ── Error pages ───────────────────────────────────────────────────────────
+ErrorDocument 404 /404.html

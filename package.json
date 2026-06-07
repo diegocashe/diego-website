@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "diegocastillo-websile",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "astro": "^6.4.4"
+    "astro": "^6.4.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.60.1",
