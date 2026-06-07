@@ -1,0 +1,144 @@
+---
+import type { HTMLTag } from 'astro/types';
+
+type Variant =
+  | 'display'
+  | 'h1' | 'h2' | 'h3' | 'h4'
+  | 'body' | 'body-sm'
+  | 'eyebrow' | 'eyebrow-muted'
+  | 'stat'
+  | 'label'
+  | 'caption';
+
+interface Props {
+  as?:     HTMLTag;
+  variant: Variant;
+  class?:  string;
+}
+
+const DEFAULT_TAGS = {
+  display:         'h1',
+  h1:              'h1',
+  h2:              'h2',
+  h3:              'h3',
+  h4:              'h4',
+  body:            'p',
+  'body-sm':       'p',
+  eyebrow:         'span',
+  'eyebrow-muted': 'span',
+  stat:            'span',
+  label:           'span',
+  caption:         'span',
+} as const satisfies Record<Variant, HTMLTag>;
+
+const { as, variant, class: className } = Astro.props as Props;
+
+const Tag: HTMLTag = as ?? DEFAULT_TAGS[variant];
+const variantCls = `t-${variant}`;
+---
+
+<Tag class:list={[variantCls, className]}>
+  <slot />
+</Tag>
+
+<style>
+  /* ── Display / headings ── */
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+    margin: 0;
+  }
+  .t-h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-h1);
+    line-height: 1.15;
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+    margin: 0;
+  }
+  .t-h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-h2);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+    margin: 0;
+  }
+  .t-h3 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: var(--text-h3);
+    line-height: 1.3;
+    letter-spacing: var(--tracking-card);
+    color: var(--ink);
+    margin: 0;
+  }
+  .t-h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  /* ── Body ── */
+  .t-body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    color: var(--ink);
+    margin: 0;
+  }
+  .t-body-sm {
+    font-family: var(--font-sans);
+    font-size: var(--text-body-sm);
+    line-height: var(--leading-body-sm);
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  /* ── Eyebrow / labels ── */
+  .t-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--blue-d);
+  }
+  .t-eyebrow-muted {
+    font-family: var(--font-mono);
+    font-size: var(--text-eyebrow);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .t-caption {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--ink-3);
+  }
+
+  /* ── Stat ── */
+  .t-stat {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: var(--text-stat);
+    letter-spacing: var(--tracking-tighter);
+    line-height: 1;
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,133 @@
+---
+import SectionHeader from '../atoms/SectionHeader.astro';
+import Typography    from '../atoms/Typography.astro';
+
+const variants = [
+  { variant: 'display',       label: 'display',       sample: 'Construyo producto, de la idea al deploy.' },
+  { variant: 'h1',            label: 'h1',             sample: 'Wordmark UI Kit' },
+  { variant: 'h2',            label: 'h2',             sample: 'Proyectos recientes' },
+  { variant: 'h3',            label: 'h3',             sample: 'Card heading' },
+  { variant: 'h4',            label: 'h4',             sample: 'Subheading' },
+  { variant: 'body',          label: 'body',           sample: 'Diseño sistemas claros, escribo código que se mantiene y envío rápido.' },
+  { variant: 'body-sm',       label: 'body-sm',        sample: 'Descripción de proyecto o detalle secundario.' },
+  { variant: 'eyebrow',       label: 'eyebrow',        sample: 'Trabajo seleccionado' },
+  { variant: 'eyebrow-muted', label: 'eyebrow-muted',  sample: 'Disponible para proyectos' },
+  { variant: 'stat',          label: 'stat',           sample: '48.' },
+  { variant: 'label',         label: 'label',          sample: 'Proyectos' },
+  { variant: 'caption',       label: 'caption',        sample: '© 2026' },
+] as const;
+---
+
+<section>
+  <SectionHeader number="02" title="Tipografía" />
+
+  <div class="stack">
+    {variants.map(({ variant, label, sample }) => (
+      <div class:list={['row', variant === 'eyebrow-muted' ? 'dark' : '']}>
+        <span class="meta">{label}</span>
+        <div class="preview">
+          <Typography variant={variant}>{sample}</Typography>
+        </div>
+        <span class="fonts">{
+          ['display','h1','h2','h3','h4'].includes(variant)             ? 'Space Grotesk' :
+          ['eyebrow','eyebrow-muted','label','caption'].includes(variant) ? 'JetBrains Mono' :
+          'Manrope'
+        }</span>
+      </div>
+    ))}
+  </div>
+
+  <!-- Font reference -->
+  <div class="font-ref panel pad">
+    <div class="tag-lab">Familias usadas</div>
+    <div class="families">
+      <div class="fam">
+        <span class="fname" style="font-family:var(--font-display)">Space Grotesk</span>
+        <span class="frole">Display / headings</span>
+      </div>
+      <div class="fam">
+        <span class="fname" style="font-family:var(--font-sans)">Manrope</span>
+        <span class="frole">Body / stats</span>
+      </div>
+      <div class="fam">
+        <span class="fname" style="font-family:var(--font-mono)">JetBrains Mono</span>
+        <span class="frole">Labels / eyebrows / code</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--line);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr 120px;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 24px;
+    background: var(--paper);
+  }
+  .row.dark { background: var(--ink); }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .row.dark .meta { color: rgba(255,255,255,0.3); }
+
+  .preview { overflow: hidden; }
+
+  .fonts {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .row.dark .fonts { color: rgba(255,255,255,0.25); }
+
+  /* Font reference card */
+  .font-ref {
+    margin-top: 22px;
+  }
+  .families {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .fam {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fname {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .frole {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 90px 1fr; }
+    .fonts { display: none; }
+  }
+</style>

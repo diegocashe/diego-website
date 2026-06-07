@@ -49,7 +49,7 @@ import Button from '../ds/atoms/Button.astro';
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11.5px;
     letter-spacing: 0.26em;
     text-transform: uppercase;
@@ -71,19 +71,19 @@ import Button from '../ds/atoms/Button.astro';
   }
 
   h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: clamp(32px, 5vw, 52px);
-    letter-spacing: -0.03em;
+    letter-spacing: var(--tracking-tight);
     color: #fff;
-    line-height: 1.05;
+    line-height: var(--leading-display);
     margin: 0;
   }
   .blue-dot { color: var(--blue); }
 
   p {
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
     color: rgba(255,255,255,0.55);
     margin: 0;
   }
