@@ -8,7 +8,7 @@ import PageHero   from '../../components/shared/PageHero.astro';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts
-  .filter(({ data }) => data.draft !== true)
+  .filter(({ data }) => !data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const [featured, ...rest] = posts;

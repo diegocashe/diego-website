@@ -20,7 +20,7 @@ import { z } from 'zod';
 
 export const contactFormSchema = z.object({
   name:    z.string().min(1).max(100).trim(),
-  email:   z.string().email().max(254).toLowerCase().trim(),
+  email:   z.email().max(254).toLowerCase().trim(),
   message: z.string().min(10).max(2000).trim(),
   // Honeypot field — bots fill this in, humans don't see it
   _trap:   z.string().max(0, 'Bot detected').optional(),
@@ -144,9 +144,9 @@ export function parseCookie(request: Request, name: string): string | undefined 
   const cookies = Object.fromEntries(
     header.split(';').map((c) => {
       const [k, ...v] = c.trim().split('=');
-      return [k?.trim(), decodeURIComponent(v.join('='))];
+      return [k?.trim() ?? '', decodeURIComponent(v.join('='))];
     })
-  );
+  ) as Record<string, string | undefined>;
 
   return cookies[name];
 }
@@ -173,8 +173,11 @@ export function decodeJwtPayload(token: string): Record<string, unknown> | null 
   if (parts.length !== 3) return null;
 
   try {
-    const payload = JSON.parse(atob(parts[1]!.replace(/-/g, '+').replace(/_/g, '/')));
-    const exp = payload?.exp;
+    const part = parts[1];
+    if (!part) return null;
+    const payload: unknown = JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')));
+    if (typeof payload !== 'object' || payload === null) return null;
+    const exp = (payload as Record<string, unknown>)['exp'];
     if (typeof exp === 'number' && Date.now() / 1000 > exp) {
       return null; // expired
     }

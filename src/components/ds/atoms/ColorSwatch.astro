@@ -20,7 +20,7 @@ interface Props {
   hex: string;
   border?: boolean;
 }
-const { name, hex, border = false } = Astro.props;
+const { name: swatchName, hex, border = false } = Astro.props;
 
 const chipStyle = border
   ? `background:${hex};border-right:1px solid var(--line)`
@@ -30,7 +30,7 @@ const chipStyle = border
 <div class="sw">
   <div class="chip" style={chipStyle}></div>
   <div class="meta">
-    <b>{name}</b>
+    <b>{swatchName}</b>
     <code>{hex.toUpperCase()}</code>
   </div>
 </div>

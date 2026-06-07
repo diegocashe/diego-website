@@ -78,7 +78,7 @@ const tiers = [
       <PricingCard
         name={t.name}
         price={t.price}
-        period={'period' in t ? t.period : undefined}
+        {...'period' in t && { period: t.period }}
         features={[...t.features]}
         ctaLabel={t.ctaLabel}
         featured={t.featured}

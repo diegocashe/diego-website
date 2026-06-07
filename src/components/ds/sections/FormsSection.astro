@@ -22,21 +22,21 @@ import SectionHeader from '../atoms/SectionHeader.astro';
     <div class="grid3">
 
       <div class="field">
-        <label>Nombre</label>
-        <input class="input" placeholder="Tu nombre" value="Diego Castillo" />
+        <label for="f-nombre">Nombre</label>
+        <input id="f-nombre" class="input" placeholder="Tu nombre" value="Diego Castillo" />
       </div>
 
       <div class="field">
-        <label>Correo</label>
+        <label for="f-correo">Correo</label>
         <div class="input-icon">
           <span class="ic">@</span>
-          <input class="input" placeholder="hola@correo.dev" />
+          <input id="f-correo" class="input" placeholder="hola@correo.dev" />
         </div>
       </div>
 
       <div class="field">
-        <label>Servicio</label>
-        <select class="input">
+        <label for="f-servicio">Servicio</label>
+        <select id="f-servicio" class="input">
           <option>Desarrollo web</option>
           <option>Consultoría</option>
           <option>Mantenimiento</option>
@@ -44,22 +44,22 @@ import SectionHeader from '../atoms/SectionHeader.astro';
       </div>
 
       <div class="field">
-        <label>Buscar</label>
+        <label for="f-buscar">Buscar</label>
         <div class="input-icon">
           <span class="ic">⌕</span>
-          <input class="input" placeholder="Buscar proyecto…" />
+          <input id="f-buscar" class="input" placeholder="Buscar proyecto…" />
         </div>
       </div>
 
       <div class="field">
-        <label>Presupuesto</label>
-        <input class="input err" value="abc" />
+        <label for="f-presupuesto">Presupuesto</label>
+        <input id="f-presupuesto" class="input err" value="abc" />
         <span class="hint err">Ingresa un monto válido.</span>
       </div>
 
       <div class="field">
-        <label>Teléfono</label>
-        <input class="input" placeholder="+52 ·· ···· ····" />
+        <label for="f-telefono">Teléfono</label>
+        <input id="f-telefono" class="input" placeholder="+52 ·· ···· ····" />
         <span class="hint">Opcional.</span>
       </div>
 

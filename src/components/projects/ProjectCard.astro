@@ -26,8 +26,8 @@ interface Props {
   company:     string;
   gradient:    string;
 }
-const { slug, title, description, tags, category, status, year, company, gradient } = Astro.props;
-const statusLabel = status === 'delivered' ? 'Entregado' : 'En curso';
+const { slug, title, description, tags, category, status: projectStatus, year, company, gradient } = Astro.props;
+const statusLabel = projectStatus === 'delivered' ? 'Entregado' : 'En curso';
 ---
 
 <article class="card" data-category={category} data-slug={slug}>
@@ -38,7 +38,7 @@ const statusLabel = status === 'delivered' ? 'Entregado' : 'En curso';
 
   <div class="body">
     <div class="meta-row">
-      <span class:list={['status', status]}>
+      <span class:list={['status', projectStatus]}>
         <span class="status-dot"></span>
         {statusLabel}
       </span>

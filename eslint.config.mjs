@@ -2,16 +2,22 @@
 import eslintPluginAstro from 'eslint-plugin-astro';
 import tseslint from 'typescript-eslint';
 
+const TS_FILES = ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'];
+
 export default [
-  // TypeScript strict + stylistic type-checked rules
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  // TypeScript strict + stylistic type-checked rules — scoped to TS files only.
+  // Applying these globally breaks .astro files: the Astro parser can't provide
+  // full type information to typescript-eslint, producing false "error" typed values.
+  ...tseslint.configs.strictTypeChecked.map((config) => ({ ...config, files: TS_FILES })),
+  ...tseslint.configs.stylisticTypeChecked.map((config) => ({ ...config, files: TS_FILES })),
 
-  // Astro-specific rules
+  // Astro-specific rules + strict accessibility (jsx-a11y wired through Astro parser)
   ...eslintPluginAstro.configs.recommended,
+  ...eslintPluginAstro.configs['jsx-a11y-strict'],
 
-  // TypeScript parser project config
+  // TypeScript parser project config — type-checked rules need tsconfig
   {
+    files: TS_FILES,
     languageOptions: {
       parserOptions: {
         project: true,
@@ -22,7 +28,7 @@ export default [
 
   // Additional strict rules for TS files
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
+    files: TS_FILES,
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',

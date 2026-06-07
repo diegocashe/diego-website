@@ -42,7 +42,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
-type InformativeProps = {
+interface InformativeProps {
   src:           ImageMetadata;
   alt:           string;          // non-empty description required
   decorative?:   false;
@@ -51,9 +51,9 @@ type InformativeProps = {
   class?:        string;
   loading?:      'lazy' | 'eager';
   fetchpriority?: 'auto' | 'high' | 'low';
-};
+}
 
-type DecorativeProps = {
+interface DecorativeProps {
   src:           ImageMetadata;
   decorative:    true;
   alt?:          never;           // alt is forbidden — component sets "" automatically
@@ -62,7 +62,7 @@ type DecorativeProps = {
   class?:        string;
   loading?:      'lazy' | 'eager';
   fetchpriority?: 'auto' | 'high' | 'low';
-};
+}
 
 type Props = InformativeProps | DecorativeProps;
 
@@ -82,10 +82,10 @@ const alt = decorative ? '' : (Astro.props as InformativeProps).alt;
 <Image
   src={src}
   alt={alt}
-  width={width}
-  height={height}
-  class={cls}
   loading={loading}
   fetchpriority={fetchpriority}
-  {...decorative ? { role: 'presentation' } : {}}
+  {...width !== undefined && { width }}
+  {...height !== undefined && { height }}
+  {...cls !== undefined && { class: cls }}
+  {...decorative && { role: 'presentation' }}
 />

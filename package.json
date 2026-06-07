@@ -16,12 +16,17 @@
   },
   "dependencies": {
     "astro": "^6.4.4",
+    "gsap": "^3.15.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/ts-plugin": "^1.10.9",
     "@typescript-eslint/parser": "^8.60.1",
     "eslint": "^10.4.1",
     "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1"
   }
 }

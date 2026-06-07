@@ -55,8 +55,8 @@ const contacts = [
             initials={c.initials}
             name={c.name}
             role={c.role}
-            avatarBg={'avatarBg' in c ? c.avatarBg : undefined}
-            online={'online' in c ? c.online : false}
+            {...'avatarBg' in c && { avatarBg: c.avatarBg }}
+            {...'online' in c && { online: c.online }}
             action={c.action}
             actionLabel={c.actionLabel}
           />
