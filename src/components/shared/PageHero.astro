@@ -22,11 +22,15 @@ const { eyebrow, title, description } = Astro.props;
 <header class="page-header-dark">
   <div class="page-inner">
     <div class="eyebrow-muted">{eyebrow}</div>
-    <h1>{title}<span class="accent">.</span></h1>
+    <h1><span data-glitch>{title}</span><span class="accent">.</span></h1>
     {description && <p class="lead">{description}</p>}
     <slot />
   </div>
 </header>
+
+<script>
+  import '../../scripts/glitch';
+</script>
 
 <style>
   .page-inner { padding-top: 0; }

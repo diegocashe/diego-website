@@ -20,7 +20,7 @@ import { skills, experience, education, publications } from '../data/cv';
     <div class="cv-inner">
       <div class="hero-left">
         <div class="eyebrow-muted">Curriculum Vitae</div>
-        <h1>{site.name}<span class="dot">.</span></h1>
+        <h1><span data-glitch>{site.name}</span><span class="dot">.</span></h1>
         <p class="role">{site.role}</p>
         <p class="summary">
           7+ years architecting high-performance web applications and leading technical teams.
@@ -319,5 +319,6 @@ import { skills, experience, education, publications } from '../data/cv';
 </style>
 
 <script>
+  import '../scripts/glitch';
   document.getElementById('print-btn')?.addEventListener('click', () => window.print());
 </script>

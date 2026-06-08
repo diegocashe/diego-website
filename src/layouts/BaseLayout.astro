@@ -195,11 +195,12 @@ const articleSchema = ogType === 'article' && pubDate ? {
 
     // 2. Move focus to #main-content (or <main> as fallback)
     //    so keyboard users don't get stranded at the top of the old DOM.
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     const main = document.getElementById('main-content') ?? document.querySelector('main');
     if (main) {
-      // tabindex="-1" lets us programmatically focus a non-interactive element
       if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
-      main.focus({ preventScroll: false });
+      main.focus({ preventScroll: true });
     }
   });
 
