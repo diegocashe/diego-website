@@ -172,7 +172,24 @@ body.ds-bg { background: var(--bg); }
   background: var(--ink);
   padding: 64px 40px 72px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
 }
+.page-header-dark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--spot-x, -9999px) var(--spot-y, -9999px),
+    rgba(45, 108, 255, 0.10),
+    transparent 55%
+  );
+  opacity: var(--spot-o, 0);
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+.page-header-dark > * { position: relative; z-index: 1; }
 @media (max-width: 640px) {
   .page-header-dark { padding: 48px 24px 56px; }
 }

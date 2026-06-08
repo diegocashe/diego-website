@@ -26,6 +26,7 @@
 import { ClientRouter } from 'astro:transitions';
 import { site, seo }       from '../data/site';
 import '../styles/global.css';
+import CursorFollower from '../components/shared/CursorFollower.astro';
 
 interface Props {
   title:        string;
@@ -174,6 +175,7 @@ const articleSchema = ogType === 'article' && pubDate ? {
     ></div>
 
     <slot />
+    <CursorFollower />
   </body>
 </html>
 
