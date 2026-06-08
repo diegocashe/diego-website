@@ -14,13 +14,22 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
   <main id="main-content" class="nf-main">
     <section class="not-found">
 
-      <div class="nf-bg-num" aria-hidden="true">404</div>
+      <!-- Dot grid background texture -->
+      <div class="nf-grid" aria-hidden="true"></div>
+
+      <!-- Giant ghost "404" — split for individual animation -->
+      <div class="nf-bg-num" aria-hidden="true">
+        <span class="d d1">4</span>
+        <span class="d d0">0</span>
+        <span class="d d2">4</span>
+      </div>
 
       <div class="nf-inner">
         <p class="eyebrow nf-eyebrow">Error · 404</p>
 
         <h1 class="nf-heading">
-          Página no<br />encontrada<span class="blue-dot">.</span>
+          <span class="nf-line">Página no</span><br />
+          <span class="nf-line">encontrada</span><span class="blue-dot">.</span>
         </h1>
 
         <p class="nf-desc">
@@ -50,7 +59,6 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
 </Layout>
 
 <style>
-  /* Flex column layout so main fills the gap between navbar and footer */
   :global(body.page-404) {
     min-height: 100dvh;
     display: flex;
@@ -73,13 +81,30 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
     border-bottom: 1px solid var(--line);
   }
 
-  /* Ghost "404" behind content */
+  /* Dot grid */
+  .nf-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--line) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Ghost "404" */
   .nf-bg-num {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.01em;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .d {
+    display: inline-block;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: clamp(160px, 28vw, 400px);
@@ -87,13 +112,17 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
     letter-spacing: var(--tracking-tighter);
     color: var(--line-2);
     user-select: none;
-    pointer-events: none;
-    z-index: 0;
+    will-change: transform;
+  }
+  /* The rogue zero gets a blue tint — it's the missing one */
+  .d0 {
+    color: var(--tint);
   }
 
+  /* Content layer */
   .nf-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -115,6 +144,7 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
     color: var(--ink);
     margin: 0 0 24px;
   }
+  .nf-line { display: inline; }
 
   .blue-dot { color: var(--blue); }
 
@@ -145,7 +175,7 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
     display: inline-flex;
     align-items: center;
     gap: 9px;
-    transition: 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     line-height: 1;
     white-space: nowrap;
     text-decoration: none;
@@ -178,8 +208,208 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
   }
 
   @media (max-width: 640px) {
-    .nf-inner  { padding: 60px 24px; }
+    .nf-inner   { padding: 60px 24px; }
     .nf-heading { font-size: clamp(32px, 10vw, 48px); }
-    .nf-bg-num  { font-size: clamp(120px, 40vw, 200px); }
+    .d          { font-size: clamp(120px, 36vw, 200px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .d { will-change: auto; }
   }
 </style>
+
+<script>
+  import { gsap } from "gsap";
+
+  const GLITCH_CHARS = "!@#$%&*?X0123456789ABCDEFGHIJKLMNOPQRST";
+
+  let floatTween: gsap.core.Tween | null = null;
+  let glitchTimer: ReturnType<typeof setInterval> | null = null;
+  let mouseFn: ((e: MouseEvent) => void) | null = null;
+  let entryDone = false;
+
+  function cleanup() {
+    entryDone = false;
+    floatTween?.kill();
+    floatTween = null;
+    if (glitchTimer) { clearInterval(glitchTimer); glitchTimer = null; }
+    if (mouseFn) { window.removeEventListener("mousemove", mouseFn); mouseFn = null; }
+  }
+
+  function scramble(el: HTMLElement, duration = 0.55) {
+    const original = el.textContent ?? "";
+    const len = original.length;
+    const totalFrames = Math.round(duration * 60);
+    let frame = 0;
+
+    const id = setInterval(() => {
+      frame++;
+      const progress = frame / totalFrames;
+      // Quadratic ease-in: early frames mostly random, later frames mostly resolved
+      const resolved = Math.floor(Math.pow(progress, 1.8) * len);
+
+      el.textContent = original
+        .split("")
+        .map((char, i) => {
+          if (i < resolved || char === " ") return char;
+          return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+        })
+        .join("");
+
+      if (frame >= totalFrames) {
+        el.textContent = original;
+        clearInterval(id);
+      }
+    }, 1000 / 60);
+  }
+
+  function glitchFlash(el: HTMLElement) {
+    const original = el.textContent ?? "";
+    el.textContent = original
+      .split("")
+      .map((c) =>
+        c === " "
+          ? c
+          : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
+      )
+      .join("");
+    setTimeout(() => { el.textContent = original; }, 100);
+  }
+
+  function init() {
+    const section = document.querySelector<HTMLElement>(".not-found");
+    if (!section) return;
+
+    const d1    = section.querySelector<HTMLElement>(".d1")!;
+    const d0    = section.querySelector<HTMLElement>(".d0")!;
+    const d2    = section.querySelector<HTMLElement>(".d2")!;
+    const eyebrow = section.querySelector<HTMLElement>(".nf-eyebrow")!;
+    const lines   = section.querySelectorAll<HTMLElement>(".nf-line");
+    const blueDot = section.querySelector<HTMLElement>(".blue-dot")!;
+    const desc  = section.querySelector<HTMLElement>(".nf-desc")!;
+    const ctas  = section.querySelector<HTMLElement>(".nf-ctas")!;
+    const tags  = [...section.querySelectorAll<HTMLElement>(".nf-tag")];
+
+    // ── Initial hidden state ──────────────────────────
+    gsap.set([d1, d2], { autoAlpha: 0, x: 0, y: 0, rotation: 0 });
+    gsap.set(d0,         { autoAlpha: 0, x: 0, y: 0, rotation: 0 });
+    gsap.set([eyebrow, desc, ctas, ...tags, blueDot], { autoAlpha: 0 });
+    gsap.set(lines,      { autoAlpha: 0 });
+
+    // ── Entry timeline ────────────────────────────────
+    const tl = gsap.timeline({
+      delay: 0.15,
+      onComplete() {
+        entryDone = true;
+        startIdle();
+        startMouse();
+        startGlitch();
+      },
+    });
+
+    // "4" — dives from top-left, spins CCW
+    tl.fromTo(
+      d1,
+      { autoAlpha: 0, x: -180, y: -120, rotation: -50 },
+      { autoAlpha: 1, x: 0,    y: 0,    rotation: 0,
+        duration: 0.9, ease: "back.out(1.4)" },
+      0
+    )
+    // "4" — dives from top-right, spins CW
+    .fromTo(
+      d2,
+      { autoAlpha: 0, x: 180, y: -120, rotation: 50 },
+      { autoAlpha: 1, x: 0,   y: 0,    rotation: 0,
+        duration: 0.9, ease: "back.out(1.4)" },
+      0.06
+    )
+    // "0" — rolls up from below (3 full spins — like a wheel)
+    .fromTo(
+      d0,
+      { autoAlpha: 0, y: 280, rotation: -1080 },
+      { autoAlpha: 1, y: 0,   rotation: 0,
+        duration: 1.4, ease: "back.out(0.9)" },
+      0.04
+    )
+
+    // ── Content ──────────────────────────────────────
+    .fromTo(
+      eyebrow,
+      { autoAlpha: 0, y: 16 },
+      { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out" },
+      0.7
+    )
+    // Heading: each line scrambles in, staggered
+    .add(() => {
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          gsap.to(line, { autoAlpha: 1, duration: 0.05 });
+          scramble(line, 0.55);
+        }, i * 140);
+      });
+      setTimeout(() => {
+        gsap.fromTo(blueDot,
+          { autoAlpha: 0, scale: 0, rotation: -90 },
+          { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.4, ease: "back.out(2)" }
+        );
+      }, lines.length * 140 + 400);
+    }, 0.9)
+    .fromTo(
+      desc,
+      { autoAlpha: 0, y: 14 },
+      { autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out" },
+      1.45
+    )
+    .fromTo(
+      ctas,
+      { autoAlpha: 0, y: 10 },
+      { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out" },
+      1.6
+    )
+    .fromTo(
+      tags,
+      { autoAlpha: 0, y: 8 },
+      { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" },
+      1.75
+    );
+  }
+
+  // ── Idle: d0 bobs gently ─────────────────────────────────────────────────
+  function startIdle() {
+    floatTween = gsap.to(".d0", {
+      y: -22,
+      duration: 2.4,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+    });
+  }
+
+  // ── Mouse parallax — x-axis only (y belongs to float) ───────────────────
+  function startMouse() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const cx = window.innerWidth / 2;
+    mouseFn = (e: MouseEvent) => {
+      if (!entryDone) return;
+      const dx = (e.clientX - cx) / cx; // -1 → 1
+      // d1 and d2 drift wide, d0 drifts narrow (depth illusion)
+      gsap.to(".d1", { x: dx * -40, duration: 1.1, ease: "power1.out", overwrite: "auto" });
+      gsap.to(".d0", { x: dx * 14,  duration: 1.5, ease: "power1.out", overwrite: "auto" });
+      gsap.to(".d2", { x: dx *  40, duration: 1.1, ease: "power1.out", overwrite: "auto" });
+    };
+    window.addEventListener("mousemove", mouseFn, { passive: true });
+  }
+
+  // ── Periodic glitch on heading lines ────────────────────────────────────
+  function startGlitch() {
+    glitchTimer = setInterval(() => {
+      const lines = document.querySelectorAll<HTMLElement>(".nf-line");
+      lines.forEach((line, i) => {
+        setTimeout(() => glitchFlash(line), i * 80);
+      });
+    }, 5000);
+  }
+
+  document.addEventListener("astro:before-swap", cleanup);
+  document.addEventListener("astro:page-load", init);
+</script>
