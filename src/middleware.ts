@@ -108,18 +108,17 @@ function applySecurityHeaders(headers: Headers, nonce: string): void {
 // ── Middleware entry point ────────────────────────────────────────────────
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  // 1. Generate a nonce for this request
   const nonce = generateNonce();
-
-  // 2. Make the nonce available inside .astro components via Astro.locals.nonce
-  //    Usage in BaseLayout: <script nonce={Astro.locals.nonce}>
   context.locals.nonce = nonce;
 
-  // 3. Process the request
   const response = await next();
 
-  // 4. Clone response to attach security headers
-  //    (Response headers are immutable on the original object in some runtimes)
+  // Skip security headers in dev — strict-dynamic CSP blocks Vite HMR
+  // and unbundled module scripts that don't carry a nonce
+  if (import.meta.env.DEV) {
+    return response;
+  }
+
   const newHeaders = new Headers(response.headers);
   applySecurityHeaders(newHeaders, nonce);
 
