@@ -1,34 +1,66 @@
 ---
-import Button from '../ds/atoms/Button.astro';
+import Button from "../ds/atoms/Button.astro";
+import HeroLogo from "./HeroLogo.astro";
 ---
 
-<section class="hero">
-  <div class="inner">
+<section class="hero-logo">
 
-    <!-- Left: text -->
-    <div class="content">
-      <div class="eyebrow">
+  <!-- Esquina superior izquierda -->
+  <div class="hl-eyebrow">
+    <span class="hl-status-dot"></span>
+    Lead Frontend · Full-Stack
+  </div>
+
+  <!-- Esquina superior derecha -->
+  <div class="hl-meta" aria-hidden="true">
+    <span>7+ años</span>
+    <span class="sep">·</span>
+    <span>React · Node · TS</span>
+  </div>
+
+  <!-- Esquina inferior izquierda -->
+  <p class="hl-tagline">
+    Construyo producto,<br />de la idea al deploy.
+  </p>
+
+  <!-- Esquina inferior derecha -->
+  <div class="hl-stack" aria-hidden="true">
+    <span class="hl-stack-item">React</span>
+    <span class="hl-stack-item">TypeScript</span>
+    <span class="hl-stack-item">Node.js</span>
+    <span class="hl-stack-item">PostgreSQL</span>
+  </div>
+
+  <!-- Bottom center -->
+  <div class="hl-scroll-hint" aria-label="Desplázate para continuar">
+    <span class="hl-scroll-label">scroll</span>
+    <span class="hl-scroll-arrow" aria-hidden="true">
+      <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+        <line x1="8" y1="0" x2="8" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <polyline points="3,15 8,21 13,15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </span>
+  </div>
+
+  <div class="inner">
+    <!-- Columna izquierda: contenido del hero (aparece durante el scroll) -->
+    <div class="hl-content">
+      <div class="hl-content-eyebrow">
         <span class="dot-pulse"></span>
         Programador Full-Stack
       </div>
-
       <h1>
         Construyo producto,<br />
         de la idea al deploy<span class="blue-dot">.</span>
       </h1>
-
       <p>
-        Diseño sistemas claros, escribo código que se mantiene
-        y envío rápido. Disponible para proyectos freelance.
+        Diseño sistemas claros, escribo código que se mantiene y envío rápido.
+        Disponible para proyectos freelance.
       </p>
-
       <div class="ctas">
-        <Button variant="ink" size="lg">
-          Ver proyectos <span class="arr">→</span>
-        </Button>
+        <Button variant="ink" size="lg">Ver proyectos <span class="arr">→</span></Button>
         <Button variant="out" size="lg">Descargar CV</Button>
       </div>
-
       <div class="stack-tags">
         <span class="tag">React</span>
         <span class="tag">TypeScript</span>
@@ -37,46 +69,72 @@ import Button from '../ds/atoms/Button.astro';
       </div>
     </div>
 
-    <!-- Right: brand mark -->
-    <div class="mark-wrap" aria-hidden="true">
-      <div class="mark">
-        <div class="wm stack rev" style="font-size:clamp(28px,4.5vw,52px);">
-          <span>diego</span>
-          <span>castillo<span class="dot">.</span></span>
-        </div>
-      </div>
+    <!-- Columna derecha: placeholder invisible que ancla la posición destino del logo -->
+    <div class="mark-col" aria-hidden="true">
+      <div class="mark-placeholder"></div>
       <div class="mark-glow"></div>
     </div>
-
   </div>
+
+  <!-- Logo: capa flotante centrada, contiene la animación -->
+  <div class="logo-stage">
+    <HeroLogo />
+  </div>
+
 </section>
 
 <style>
-  .hero {
-    background: #fff;
-    padding: 80px 40px 96px;
+  .hero-logo {
+    height: calc(100dvh - 60px);
+    position: relative;
     border-bottom: 1px solid var(--line);
+    margin-top: -2dvh;
   }
-  .inner {
-    max-width: 1180px;
-    margin: 0 auto;
+
+  /* ── Grid layout ── */
+  .hero-logo .inner {
+    position: absolute;
+    inset: 0 0 2rem 0;
     display: grid;
     grid-template-columns: 1.3fr 1fr;
     gap: 64px;
     align-items: center;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 3vw, 2.5rem);
+    pointer-events: none;
   }
 
-  /* ── Eyebrow ── */
-  .eyebrow {
+  /* ── Logo stage: capa flotante centrada sobre el grid ── */
+  .logo-stage {
+    position: absolute;
+    inset: 0 0 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 900px;
+    perspective-origin: 50% 50%;
+  }
+
+  /* ── Columna izquierda ── */
+  .hl-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    pointer-events: all;
+  }
+  /* opacity:0 en hijos evita FOUC sin bloquear el autoAlpha de GSAP */
+  .hl-content > * { opacity: 0; }
+
+  .hl-content-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--blue-d);
     margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-2);
   }
   .dot-pulse {
     width: 8px;
@@ -88,47 +146,41 @@ import Button from '../ds/atoms/Button.astro';
     animation: pulse 2s infinite;
   }
   @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0   rgba(31,138,91,0.45); }
-    70%  { box-shadow: 0 0 0 8px rgba(31,138,91,0);    }
-    100% { box-shadow: 0 0 0 0   rgba(31,138,91,0);    }
+    0%   { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(31, 138, 91, 0);    }
+    100% { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0);    }
   }
 
-  /* ── Headline ── */
-  h1 {
-    font-family: 'Space Grotesk', sans-serif;
+  .hl-content h1 {
+    font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(32px, 4.5vw, 54px);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
+    font-size: var(--text-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
     color: var(--ink);
     margin: 0 0 20px;
   }
   .blue-dot { color: var(--blue); }
-
-  p {
-    font-size: 16px;
-    line-height: 1.65;
+  .hl-content p {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
     color: var(--ink-2);
     max-width: 440px;
     margin: 0 0 32px;
   }
-
-  /* ── CTAs ── */
   .ctas {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     margin-bottom: 32px;
   }
-
-  /* ── Stack tags ── */
   .stack-tags {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
   }
   .tag {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11.5px;
     font-weight: 500;
     padding: 5px 10px;
@@ -137,41 +189,150 @@ import Button from '../ds/atoms/Button.astro';
     color: var(--ink-2);
   }
 
-  /* ── Brand mark ── */
-  .mark-wrap {
+  /* ── Columna derecha ── */
+  .mark-col {
     position: relative;
     display: flex;
     justify-content: center;
   }
-  .mark {
+  .mark-placeholder {
     width: min(380px, 100%);
     aspect-ratio: 1;
-    background: var(--ink);
     border-radius: 28px;
-    display: grid;
-    place-items: start;
-    align-items: center;
-    padding-left: 13%;
-    position: relative;
-    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
   }
-  .mark .wm { line-height: 0.94; }
   .mark-glow {
     position: absolute;
     inset: 10% -5%;
     background: var(--blue);
     border-radius: 28px;
     filter: blur(48px);
-    opacity: 0.14;
+    opacity: 0;
     z-index: 0;
+    transition: opacity 0.4s;
+  }
+
+  /* ── Decorativos 4 esquinas ── */
+  .hl-eyebrow,
+  .hl-meta,
+  .hl-tagline,
+  .hl-stack { opacity: 0; }
+
+  .hl-eyebrow {
+    position: absolute;
+    top: clamp(1rem, 2.5vw, 1.75rem);
+    left: clamp(1.25rem, 3vw, 2.5rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 1.2vw, 13px);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+    z-index: 10;
+  }
+  .hl-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    flex: none;
+    animation: dot-pulse 2s infinite;
+  }
+  .hl-meta {
+    position: absolute;
+    top: clamp(1rem, 2.5vw, 1.75rem);
+    right: clamp(1.25rem, 3vw, 2.5rem);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 1.2vw, 12px);
+    font-weight: 500;
+    color: var(--ink-3, #b0b4be);
+    letter-spacing: 0.02em;
+    z-index: 10;
+  }
+  .hl-meta .sep { opacity: 0.4; }
+  .hl-tagline {
+    position: absolute;
+    bottom: clamp(1.5rem, 3.5vw, 2.5rem);
+    left: clamp(1.25rem, 3vw, 2.5rem);
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(13px, 1.4vw, 18px);
+    line-height: 1.25;
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+    opacity: 0.7;
+    z-index: 10;
+  }
+  .hl-stack {
+    position: absolute;
+    bottom: clamp(1.5rem, 3.5vw, 2.5rem);
+    right: clamp(1.25rem, 3vw, 2.5rem);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 200px;
+    z-index: 10;
+  }
+  .hl-stack-item {
+    font-family: var(--font-mono);
+    font-size: clamp(9px, 1vw, 11px);
+    font-weight: 500;
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink-2);
+  }
+
+  @keyframes dot-pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(31, 138, 91, 0);    }
+    100% { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0);    }
+  }
+
+  /* ── Scroll hint ── */
+  .hl-scroll-hint {
+    position: absolute;
+    bottom: clamp(1.5rem, 3.5vw, 2.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+    color: var(--ink-3, #b0b4be);
+  }
+  .hl-scroll-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .hl-scroll-arrow { animation: scroll-bounce 1.6s ease-in-out infinite; }
+
+  @keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%       { transform: translateY(4px); opacity: 1; }
   }
 
   @media (max-width: 900px) {
-    .inner { grid-template-columns: 1fr; }
-    .mark-wrap { display: none; }
-    h1 { font-size: clamp(30px, 8vw, 48px); }
+    .hero-logo .inner { grid-template-columns: 1fr; }
+    .mark-col { display: none; }
   }
   @media (max-width: 640px) {
-    .hero { padding: 56px 24px 72px; }
+    .hl-meta { display: none; }
+  }
+  @media (max-width: 600px) {
+    .hl-meta, .hl-stack, .hl-tagline { display: none; }
   }
 </style>

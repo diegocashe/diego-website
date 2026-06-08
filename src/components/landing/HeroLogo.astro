@@ -1,0 +1,313 @@
+---
+---
+
+<div class="logo-container">
+  <div class="logo-bg"></div>
+  <div class="logo-text logo-text--dark">
+    <span class="line">diego</span>
+    <span class="line">castillo</span>
+  </div>
+  <div class="logo-text logo-text--light" aria-hidden="true">
+    <span class="line">diego</span>
+    <span class="line">castillo</span>
+  </div>
+  <span class="dot" aria-hidden="true"></span>
+  <div class="logo-shadow"></div>
+</div>
+
+<style>
+  .logo-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: clamp(2.8rem, 13vw, 8rem);
+    --bg-w: 40px;
+    --bg-h: 40px;
+    --bg-r: clamp(12px, 1.8vw, 28px);
+  }
+
+  .logo-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(
+      calc(-50% + var(--bg-ox, 0px)),
+      calc(-50% + var(--bg-oy, 0px))
+    );
+    width: var(--bg-w);
+    height: var(--bg-h);
+    background-color: var(--ink);
+    border-radius: var(--bg-r);
+    z-index: 1;
+  }
+
+  .logo-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .logo-text--dark {
+    position: relative;
+    color: var(--ink);
+    z-index: 0;
+  }
+  .logo-text--light {
+    position: absolute;
+    inset: 0;
+    color: white;
+    z-index: 2;
+    pointer-events: none;
+    clip-path: inset(
+      calc(50% + var(--bg-oy, 0px) - var(--bg-h) / 2)
+      calc(50% - var(--bg-ox, 0px) - var(--bg-w) / 2)
+      calc(50% - var(--bg-oy, 0px) - var(--bg-h) / 2)
+      calc(50% + var(--bg-ox, 0px) - var(--bg-w) / 2)
+      round var(--bg-r)
+    );
+  }
+  .dot {
+    position: absolute;
+    top: 86%;
+    left: 102%;
+    display: block;
+    height: 0.16em;
+    width: 0.16em;
+    border-radius: 4px;
+    background-color: var(--blue);
+    z-index: 3;
+    animation: dot-pulse 2s infinite;
+  }
+  .logo-shadow {
+    position: absolute;
+    inset: 10% -5%;
+    background: var(--blue);
+    border-radius: 28px;
+    filter: blur(48px);
+    opacity: 0.14;
+    z-index: -1;
+  }
+
+  @keyframes dot-pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(31, 138, 91, 0);    }
+    100% { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0);    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const IDLE_DUR_MIN = 0.8;
+  const IDLE_DUR_MAX = 1.2;
+
+  let stInstance:   ScrollTrigger | null = null;
+  let idleTween:    gsap.core.Animation | null = null;
+  let entryTween:   gsap.core.Tween    | null = null;
+  let idleActive    = false;
+  let resizeHandler: (() => void) | null = null;
+
+  function cleanup() {
+    idleActive = false;
+    idleTween?.kill();  idleTween  = null;
+    entryTween?.kill(); entryTween = null;
+    stInstance?.kill(); stInstance = null;
+    if (resizeHandler) {
+      window.removeEventListener("resize", resizeHandler);
+      resizeHandler = null;
+    }
+  }
+
+  function init() {
+    const section   = document.querySelector<HTMLElement>(".hero-logo");
+    if (!section) return;
+    const container = section.querySelector<HTMLElement>(".logo-container")!;
+    const textEl    = section.querySelector<HTMLElement>(".logo-text--dark")!;
+    const markGlow  = section.querySelector<HTMLElement>(".mark-glow")!;
+    const markPlaceholder = section.querySelector<HTMLElement>(".mark-placeholder");
+    const contentEls = section.querySelectorAll<HTMLElement>(".hl-content > *");
+
+    function rootRem() {
+      return parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
+    function measureFull() {
+      const r = textEl.getBoundingClientRect();
+      const pad = rootRem();
+      return { w: r.width + pad * 2, h: r.height + pad * 2 };
+    }
+    function measureTarget() {
+      const r = textEl.getBoundingClientRect();
+      const pad = rootRem() * 4;
+      const side = Math.max(r.width, r.height) + pad * 2;
+      return { w: side, h: side };
+    }
+
+    const bgProxy = { w: 40, h: 40, ox: 0, oy: 0 };
+
+    function setVars(w: number, h: number, ox = 0, oy = 0) {
+      container.style.setProperty("--bg-w",  `${w}px`);
+      container.style.setProperty("--bg-h",  `${h}px`);
+      container.style.setProperty("--bg-ox", `${ox}px`);
+      container.style.setProperty("--bg-oy", `${oy}px`);
+    }
+    setVars(40, 40);
+
+    let full   = { w: 0, h: 0 };
+    let target = { w: 0, h: 0 };
+    let transX = 0, transY = 0;
+
+    function runIdleCycle() {
+      if (!idleActive) return;
+      const targetW  = full.w * (0.2 + Math.random() * 0.6);
+      const targetH  = full.h * (0.2 + Math.random() * 0.6);
+      const targetOx = (Math.random() - 0.5) * full.w * 0.5;
+      const targetOy = (Math.random() - 0.5) * full.h * 0.5;
+      const dur      = IDLE_DUR_MIN + Math.random() * (IDLE_DUR_MAX - IDLE_DUR_MIN);
+      idleTween = gsap.to(bgProxy, {
+        w: targetW, h: targetH, ox: targetOx, oy: targetOy,
+        duration: dur, ease: "sine.inOut",
+        onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+        onComplete: runIdleCycle,
+      });
+    }
+    function startIdle() {
+      if (idleActive) return;
+      idleActive = true;
+      runIdleCycle();
+    }
+    function stopIdle() {
+      idleActive = false;
+      idleTween?.kill();  idleTween  = null;
+      entryTween?.kill(); entryTween = null;  // evita que su onComplete llame startIdle
+    }
+
+    function measureMark() {
+      if (!markPlaceholder || window.innerWidth <= 900 || !stInstance) {
+        transX = 0; transY = 0; return;
+      }
+      const mRect = markPlaceholder.getBoundingClientRect();
+      if (mRect.width === 0 || mRect.height === 0) { transX = 0; transY = 0; return; }
+      const cRect = container.getBoundingClientRect();
+      transX = (mRect.left + mRect.width  / 2) - (cRect.left + cRect.width  / 2);
+      transY = (mRect.top  + mRect.height / 2) - (cRect.top  + cRect.height / 2);
+    }
+
+    gsap.set(container, { autoAlpha: 0 });
+    gsap.set(contentEls, { autoAlpha: 0, y: 28 });
+
+    requestAnimationFrame(() => {
+      full   = measureFull();
+      target = measureTarget();
+
+      const uiEls = section.querySelectorAll<HTMLElement>(
+        ".hl-eyebrow, .hl-meta, .hl-tagline, .hl-stack, .hl-scroll-hint"
+      );
+
+      // bgProxy queda fuera del scrollTl — se anima desde el estado actual del idle
+      // para evitar saltos al iniciar el scroll.
+      let bgTween: gsap.core.Tween | null = null;
+
+      const scrollTl = gsap.timeline()
+        .fromTo(container,
+          { scale: 1, x: 0, y: 0, rotateY: 0, rotateX: 0 },
+          {
+            scale: 0.38,
+            x: () => transX,
+            y: () => transY,
+            rotateY: -44,
+            rotateX: 16,
+            ease: "sine.inOut",
+            duration: 1,
+          }, 0
+        )
+        .to(contentEls,
+          { autoAlpha: 1, y: 0, stagger: 0.07, ease: "power2.out", duration: 0.55 },
+          0.45
+        );
+
+      stInstance = ScrollTrigger.create({
+        trigger: section,
+        start  : "top top",
+        end    : "+=120%",
+        pin    : true,
+        scrub  : 1.2,
+        animation: scrollTl,
+        onEnter() {
+          stopIdle();
+          gsap.to(uiEls, { autoAlpha: 0, y: -10, duration: 0.35, ease: "sine.in", overwrite: true });
+          // Partir del estado actual del proxy (donde quedó el idle)
+          bgTween?.kill();
+          bgTween = gsap.to(bgProxy, {
+            w: target.w, h: target.h, ox: 0, oy: 0,
+            duration: 0.6, ease: "sine.inOut",
+            onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+          });
+        },
+        onLeave() {
+          gsap.to(markGlow, { opacity: 0.14, duration: 0.4 });
+        },
+        onLeaveBack() {
+          bgTween?.kill();
+          gsap.to(markGlow, { opacity: 0, duration: 0.3 });
+          gsap.set(container, { clearProps: "scale,x,y,rotateX,rotateY" });
+          gsap.to(uiEls, { autoAlpha: 1, y: 0, duration: 0.4, ease: "sine.out", overwrite: true });
+          gsap.set(contentEls, { autoAlpha: 0, y: 28 });
+          // Partir del estado actual hacia full, luego reanudar idle
+          bgTween = gsap.to(bgProxy, {
+            w: full.w, h: full.h, ox: 0, oy: 0,
+            duration: 0.5, ease: "sine.out",
+            onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+            onComplete() { bgTween = null; startIdle(); },
+          });
+        },
+      });
+
+      measureMark();
+
+      const progress = stInstance.progress;
+
+      if (progress > 0) {
+        // Scroll ya pasó la sección (view transition + scroll rápido):
+        // aplicar estado final directamente sin entry animation ni idle.
+        stopIdle();
+        ScrollTrigger.refresh();
+      } else {
+        // Estado inicial normal: entry animation + idle
+        gsap.set(uiEls, { autoAlpha: 0, y: 8 });
+        entryTween = gsap.to(bgProxy, {
+          w: full.w, h: full.h,
+          duration: 1.4, ease: "expo.out", delay: 0.1,
+          onStart() {
+            gsap.to(container, { autoAlpha: 1, duration: 0.3 });
+            gsap.to(uiEls, { autoAlpha: 1, y: 0, duration: 0.6, delay: 0.5, stagger: 0.07, ease: "sine.out" });
+          },
+          onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+          onComplete() {
+            entryTween = null;
+            startIdle();
+          },
+        });
+      }
+
+      resizeHandler = () => {
+        full   = measureFull();
+        target = measureTarget();
+        ScrollTrigger.refresh();
+        measureMark();
+      };
+      window.addEventListener("resize", resizeHandler, { passive: true });
+    });
+  }
+
+  document.addEventListener("astro:before-swap", cleanup);
+  document.addEventListener("astro:page-load", init);
+</script>
