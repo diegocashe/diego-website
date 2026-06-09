@@ -1,0 +1,434 @@
+---
+import Layout      from '../../layouts/Layout.astro';
+import SiteNavbar  from '../../components/landing/SiteNavbar.astro';
+import SiteFooter  from '../../components/landing/SiteFooter.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({
+    params: { slug: p.slug },
+    props:  { project: p },
+  }));
+}
+
+const { project } = Astro.props;
+const statusLabel = project.status === 'delivered' ? 'Entregado' : 'En curso';
+---
+
+<Layout
+  title={project.title}
+  description={project.description}
+>
+  <SiteNavbar />
+
+  <header class="project-hero" style={`background: ${project.gradient}`}>
+    <div class="hero-noise"></div>
+    <div class="page-inner hero-inner">
+      <a href="/projects" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Proyectos
+      </a>
+
+      <div class="hero-meta">
+        <span class:list={['status', project.status]}>
+          <span class="status-dot"></span>
+          {statusLabel}
+        </span>
+        <span class="sep">·</span>
+        <span class="company">{project.company}</span>
+        <span class="sep">·</span>
+        <span class="year">{project.year}</span>
+      </div>
+
+      <h1>{project.title}</h1>
+      <p class="lead">{project.description}</p>
+
+      <div class="tags">
+        {project.tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+
+      {project.links && project.links.length > 0 && (
+        <div class="hero-links">
+          {project.links.map((l) => (
+            <a href={l.href} target="_blank" rel="noopener noreferrer" class="hero-link">
+              {l.label}
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 10L10 2M10 2H5M10 2v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </header>
+
+  <main id="main-content" class="project-body">
+    <div class="page-inner body-inner">
+
+      {project.longDescription && (
+        <section class="section">
+          <h2 class="section-title">
+            <span class="section-num">01</span>
+            Contexto
+          </h2>
+          <p class="body-text">{project.longDescription}</p>
+        </section>
+      )}
+
+      {project.highlights && project.highlights.length > 0 && (
+        <section class="section">
+          <h2 class="section-title">
+            <span class="section-num">02</span>
+            Lo que se construyó
+          </h2>
+          <ul class="highlight-list">
+            {project.highlights.map((h) => (
+              <li class="highlight-item">
+                <span class="hi-bullet" aria-hidden="true">✦</span>
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section class="section meta-section">
+        <h2 class="section-title">
+          <span class="section-num">{project.longDescription ? (project.highlights ? '03' : '02') : '01'}</span>
+          Detalles
+        </h2>
+        <dl class="meta-grid">
+          <div class="meta-item">
+            <dt>Categoría</dt>
+            <dd>{project.category}</dd>
+          </div>
+          <div class="meta-item">
+            <dt>Estado</dt>
+            <dd class:list={['status-inline', project.status]}>
+              <span class="status-dot"></span>
+              {statusLabel}
+            </dd>
+          </div>
+          <div class="meta-item">
+            <dt>Empresa</dt>
+            <dd>{project.company}</dd>
+          </div>
+          <div class="meta-item">
+            <dt>Año</dt>
+            <dd>{project.year}</dd>
+          </div>
+          <div class="meta-item meta-item--wide">
+            <dt>Stack</dt>
+            <dd class="tags-inline">
+              {project.tags.map((t) => <span class="tag-sm">{t}</span>)}
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="project-nav page-inner">
+    <a href="/projects" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Ver todos los proyectos
+    </a>
+  </div>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  /* ── Hero ── */
+  .project-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px 0 56px;
+  }
+
+  .hero-noise {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.15s;
+    width: fit-content;
+  }
+  .back-link:hover { color: rgba(255,255,255,0.8); }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .sep { color: rgba(255,255,255,0.2); }
+  .company, .year { color: rgba(255,255,255,0.35); }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status.delivered   { color: #4ade80; }
+  .status.in-progress { color: #60a5fa; }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin: 0;
+    line-height: 1.08;
+    max-width: 720px;
+  }
+
+  .lead {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    margin: 0;
+  }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .hero-link:hover {
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.4);
+  }
+
+  /* ── Body ── */
+  .project-body {
+    background: var(--bg);
+    padding: 64px 0 80px;
+  }
+
+  .body-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  .section { display: flex; flex-direction: column; gap: 24px; }
+
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--blue);
+    opacity: 0.7;
+  }
+
+  .body-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    max-width: 680px;
+    margin: 0;
+  }
+
+  /* ── Highlights ── */
+  .highlight-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .highlight-item:first-child { border-top: 1px solid var(--line); }
+  .hi-bullet {
+    font-size: 8px;
+    color: var(--blue);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  /* ── Meta grid ── */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .meta-item {
+    background: var(--paper);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .meta-item--wide {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--line);
+  }
+  dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  dd {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .status-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .status-inline.delivered   { color: var(--ok); }
+  .status-inline.in-progress { color: var(--blue); }
+
+  .tags-inline { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag-sm {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink-3);
+  }
+
+  /* ── Bottom nav ── */
+  .project-nav {
+    padding-top: 0;
+    padding-bottom: 40px;
+    background: var(--bg);
+  }
+  .nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-back:hover { color: var(--ink); }
+
+  @media (max-width: 768px) {
+    .meta-grid { grid-template-columns: repeat(2, 1fr); }
+    .meta-item--wide { grid-column: 1 / -1; }
+  }
+  @media (max-width: 480px) {
+    .meta-grid { grid-template-columns: 1fr; }
+    .project-hero { padding: 36px 0 40px; }
+  }
+</style>

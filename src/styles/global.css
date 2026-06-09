@@ -175,37 +175,21 @@ body.ds-bg { background: var(--bg); }
   position: relative;
   overflow: hidden;
 }
-.page-header-dark > *:not(.aura-glow):not(.aura-burst) { position: relative; z-index: 1; }
-
-.aura-glow {
+.page-header-dark::after {
+  content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0;
   background: radial-gradient(
-    480px circle at var(--gx, 50%) var(--gy, 50%),
-    rgba(45, 108, 255, 0.14) 0%,
-    rgba(45, 108, 255, 0.05) 45%,
-    transparent 70%
+    700px circle at var(--spot-x, -9999px) var(--spot-y, -9999px),
+    rgba(45, 108, 255, 0.18),
+    transparent 60%
   );
-}
-
-.aura-burst {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    rgba(45, 108, 255, 0.28) 0%,
-    rgba(45, 108, 255, 0.10) 40%,
-    transparent 70%
-  );
-  pointer-events: none;
-  translate: -50% -50%;
+  opacity: var(--spot-o, 0);
+  transition: opacity 0.5s ease;
   z-index: 0;
-  will-change: transform, opacity;
 }
+.page-header-dark > * { position: relative; z-index: 1; }
 @media (max-width: 640px) {
   .page-header-dark { padding: 48px 24px 56px; }
 }
