@@ -1,13 +1,12 @@
 <script>
+  import { gsap } from 'gsap';
+
   type Cleanup = () => void;
   let cleanups: Cleanup[] = [];
 
-  function init() {
-    cleanups.forEach((fn) => fn());
-    cleanups = [];
-
+  // ── Spotlight ────────────────────────────────────────────────────────────
+  function initSpotlight() {
     const headers = document.querySelectorAll<HTMLElement>('.page-header-dark');
-    if (!headers.length) return;
 
     headers.forEach((header) => {
       const onMove = (e: MouseEvent) => {
@@ -25,6 +24,45 @@
         header.removeEventListener('mouseleave', onLeave);
       });
     });
+  }
+
+  // ── Magnetic ─────────────────────────────────────────────────────────────
+  const MAGNETIC_SEL = 'nav a, button.btn:not([disabled]), .logo-chip';
+  const STRENGTH     = 0.32;
+
+  function initMagnetic() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const els = document.querySelectorAll<HTMLElement>(MAGNETIC_SEL);
+
+    els.forEach((el) => {
+      const onMove = (e: MouseEvent) => {
+        const r  = el.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width  / 2);
+        const dy = e.clientY - (r.top  + r.height / 2);
+        gsap.to(el, { x: dx * STRENGTH, y: dy * STRENGTH, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+      };
+
+      const onLeave = () => {
+        gsap.to(el, { x: 0, y: 0, duration: 0.65, ease: 'elastic.out(1, 0.4)', overwrite: 'auto' });
+      };
+
+      el.addEventListener('mousemove', onMove, { passive: true });
+      el.addEventListener('mouseleave', onLeave);
+      cleanups.push(() => {
+        el.removeEventListener('mousemove', onMove);
+        el.removeEventListener('mouseleave', onLeave);
+        gsap.set(el, { x: 0, y: 0 });
+      });
+    });
+  }
+
+  // ── Lifecycle ────────────────────────────────────────────────────────────
+  function init() {
+    cleanups.forEach((fn) => fn());
+    cleanups = [];
+    initSpotlight();
+    initMagnetic();
   }
 
   document.addEventListener('astro:before-swap', () => {
