@@ -42,8 +42,13 @@ import HeroLogo from "./HeroLogo.astro";
     </span>
   </div>
 
+  <!--
+    ORDEN DOM INTENCIONAL:
+    inner (contenido) va PRIMERO → z-index bajo.
+    logo-stage va SEGUNDO → z-index alto por DOM order (original).
+    En mobile usamos flex `order` para reordenarlos visualmente sin tocar el stacking.
+  -->
   <div class="inner">
-    <!-- Columna izquierda: contenido del hero (aparece durante el scroll) -->
     <div class="hl-content">
       <div class="hl-content-eyebrow">
         <span class="dot-pulse"></span>
@@ -69,14 +74,14 @@ import HeroLogo from "./HeroLogo.astro";
       </div>
     </div>
 
-    <!-- Columna derecha: placeholder invisible que ancla la posición destino del logo -->
+    <!-- Placeholder ancla para la animación de scroll en desktop (≥1024px) -->
     <div class="mark-col" aria-hidden="true">
       <div class="mark-placeholder"></div>
       <div class="mark-glow"></div>
     </div>
   </div>
 
-  <!-- Logo: capa flotante centrada, contiene la animación -->
+  <!-- Logo: viene después de inner en el DOM = encima en stacking order en desktop -->
   <div class="logo-stage">
     <HeroLogo />
   </div>
@@ -84,36 +89,52 @@ import HeroLogo from "./HeroLogo.astro";
 </section>
 
 <style>
+  /*
+   * ── MOBILE FIRST ──
+   * Flex column para apilar logo + contenido sin overlap.
+   * logo-stage sube al tope con order:1, inner baja con order:2.
+   * Preservamos el z-stacking de desktop (logo-stage after inner en DOM = encima).
+   *
+   * padding-top: espacio entre el label absoluto (hl-eyebrow) y el logo.
+   * Logo con altura fija proporcional → evita que flex:1 lo infle al 100dvh.
+   * Inner con flex:1 → llena el espacio restante para que el contenido quede centrado.
+   */
   .hero-logo {
-    height: calc(100dvh - 60px);
     position: relative;
     border-bottom: 1px solid var(--line);
-    margin-top: -2dvh;
+    margin-top: 0;             /* sin overlap con navbar en mobile */
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - 64px);
+    padding-top: 3.5rem;       /* espacio bajo el label absoluto (hl-eyebrow) */
   }
 
-  /* ── Grid layout ── */
-  .hero-logo .inner {
-    position: absolute;
-    inset: 0 0 2rem 0;
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: 64px;
-    align-items: center;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 clamp(1.5rem, 3vw, 2.5rem);
-    pointer-events: none;
-  }
-
-  /* ── Logo stage: capa flotante centrada sobre el grid ── */
+  /* ── Logo stage: altura fija proporcional, centrada ── */
   .logo-stage {
-    position: absolute;
-    inset: 0 0 2rem 0;
+    order: 1;
+    flex: none;               /* sin crecimiento: altura fija */
+    height: 42vw;
+    min-height: 160px;
+    max-height: 240px;
     display: flex;
     align-items: center;
     justify-content: center;
     perspective: 900px;
     perspective-origin: 50% 50%;
+  }
+
+  /* ── Inner: llena el espacio restante → contenido verticalmente centrado ── */
+  .hero-logo .inner {
+    order: 2;
+    flex: 1;                  /* ocupa el espacio que sobra */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  /* centrado vertical dentro del espacio disponible */
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0.5rem 1.25rem 2.5rem;
+    pointer-events: all;
   }
 
   /* ── Columna izquierda ── */
@@ -122,9 +143,8 @@ import HeroLogo from "./HeroLogo.astro";
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
-    pointer-events: all;
   }
-  /* opacity:0 en hijos evita FOUC sin bloquear el autoAlpha de GSAP */
+  /* opacity:0 evita FOUC; GSAP lo anima a 1 */
   .hl-content > * { opacity: 0; }
 
   .hl-content-eyebrow {
@@ -132,8 +152,10 @@ import HeroLogo from "./HeroLogo.astro";
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
-    font-size: 13px;
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 1.2vw, 13px);
     font-weight: 500;
+    letter-spacing: 0.04em;
     color: var(--ink-2);
   }
   .dot-pulse {
@@ -154,13 +176,14 @@ import HeroLogo from "./HeroLogo.astro";
   .hl-content h1 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: var(--text-display);
+    font-size: clamp(2rem, 7vw, var(--text-display));
     line-height: var(--leading-display);
     letter-spacing: var(--tracking-tight);
     color: var(--ink);
     margin: 0 0 20px;
   }
   .blue-dot { color: var(--blue); }
+
   .hl-content p {
     font-size: var(--text-body);
     line-height: var(--leading-body);
@@ -189,12 +212,8 @@ import HeroLogo from "./HeroLogo.astro";
     color: var(--ink-2);
   }
 
-  /* ── Columna derecha ── */
-  .mark-col {
-    position: relative;
-    display: flex;
-    justify-content: center;
-  }
+  /* ── Columna derecha: oculta siempre en mobile ── */
+  .mark-col { display: none; }
   .mark-placeholder {
     width: min(380px, 100%);
     aspect-ratio: 1;
@@ -213,15 +232,16 @@ import HeroLogo from "./HeroLogo.astro";
     transition: opacity 0.4s;
   }
 
-  /* ── Decorativos 4 esquinas ── */
+  /* ── Decorativos 4 esquinas: ocultos en mobile (GSAP los maneja) ── */
   .hl-eyebrow,
   .hl-meta,
   .hl-tagline,
-  .hl-stack { opacity: 0; }
+  .hl-stack,
+  .hl-scroll-hint { opacity: 0; }
 
   .hl-eyebrow {
     position: absolute;
-    top: clamp(1rem, 2.5vw, 1.75rem);
+    top: 1.25rem;               /* mobile: distancia cómoda desde el borde superior */
     left: clamp(1.25rem, 3vw, 2.5rem);
     display: inline-flex;
     align-items: center;
@@ -241,70 +261,25 @@ import HeroLogo from "./HeroLogo.astro";
     flex: none;
     animation: dot-pulse 2s infinite;
   }
-  .hl-meta {
-    position: absolute;
-    top: clamp(1rem, 2.5vw, 1.75rem);
-    right: clamp(1.25rem, 3vw, 2.5rem);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: clamp(10px, 1.2vw, 12px);
-    font-weight: 500;
-    color: var(--ink-3, #b0b4be);
-    letter-spacing: 0.02em;
-    z-index: 10;
-  }
-  .hl-meta .sep { opacity: 0.4; }
-  .hl-tagline {
-    position: absolute;
-    bottom: clamp(1.5rem, 3.5vw, 2.5rem);
-    left: clamp(1.25rem, 3vw, 2.5rem);
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(13px, 1.4vw, 18px);
-    line-height: 1.25;
-    letter-spacing: var(--tracking-tight);
-    color: var(--ink);
-    opacity: 0.7;
-    z-index: 10;
-  }
-  .hl-stack {
-    position: absolute;
-    bottom: clamp(1.5rem, 3.5vw, 2.5rem);
-    right: clamp(1.25rem, 3vw, 2.5rem);
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    max-width: 200px;
-    z-index: 10;
-  }
-  .hl-stack-item {
-    font-family: var(--font-mono);
-    font-size: clamp(9px, 1vw, 11px);
-    font-weight: 500;
-    padding: 4px 9px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    color: var(--ink-2);
-  }
-
   @keyframes dot-pulse {
     0%   { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0.45); }
     70%  { box-shadow: 0 0 0 8px rgba(31, 138, 91, 0);    }
     100% { box-shadow: 0 0 0 0   rgba(31, 138, 91, 0);    }
   }
 
-  /* ── Scroll hint ── */
+  /* Decorativos solo en tablet+ */
+  .hl-meta,
+  .hl-tagline,
+  .hl-stack,
+  .hl-scroll-hint { display: none; }
+
+  /* ── Scroll hint: display se establece solo en tablet+ ── */
   .hl-scroll-hint {
     position: absolute;
     bottom: clamp(1.5rem, 3.5vw, 2.5rem);
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
@@ -319,20 +294,134 @@ import HeroLogo from "./HeroLogo.astro";
     text-transform: uppercase;
   }
   .hl-scroll-arrow { animation: scroll-bounce 1.6s ease-in-out infinite; }
-
   @keyframes scroll-bounce {
     0%, 100% { transform: translateY(0); opacity: 0.5; }
     50%       { transform: translateY(4px); opacity: 1; }
   }
 
-  @media (max-width: 900px) {
-    .hero-logo .inner { grid-template-columns: 1fr; }
-    .mark-col { display: none; }
+  /*
+   * ── TABLET+ (768px) ──
+   * Restauramos layout absoluto para GSAP.
+   * DOM order se respeta: inner (bajo) → logo-stage (encima).
+   * Logo centrado (transX/Y=0) porque mark-col sigue oculto hasta 1024px.
+   */
+  @media (min-width: 768px) {
+    .hero-logo {
+      height: calc(100dvh - 60px);
+      display: block;
+      padding-top: 0;
+      margin-top: -2dvh;    /* restaurar overlap con navbar en tablet+ */
+    }
+
+    .hero-logo .inner {
+      position: absolute;
+      inset: 0 0 2rem 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items: center;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 5vw, 2.5rem);
+      pointer-events: none;
+      /* resetear propiedades mobile */
+      order: unset;
+      width: auto;
+      flex-direction: unset;
+      flex: unset;
+      justify-content: unset;
+    }
+
+    .hl-content { pointer-events: all; }
+
+    .logo-stage {
+      position: absolute;
+      inset: 0 0 2rem 0;
+      /* resetear propiedades mobile */
+      order: unset;
+      flex: unset;
+      height: auto;
+      min-height: unset;
+      max-height: unset;
+    }
+
+    /* Restaurar posicionamiento del eyebrow para tablet+ */
+    .hl-eyebrow {
+      top: clamp(1rem, 2.5vw, 1.75rem);
+    }
+
+    /* Decorativos visibles en tablet+ */
+    .hl-meta {
+      display: flex;
+      position: absolute;
+      top: clamp(1rem, 2.5vw, 1.75rem);
+      right: clamp(1.25rem, 3vw, 2.5rem);
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1.2vw, 12px);
+      font-weight: 500;
+      color: var(--ink-3, #b0b4be);
+      letter-spacing: 0.02em;
+      z-index: 10;
+    }
+    .hl-meta .sep { opacity: 0.4; }
+
+    .hl-tagline {
+      display: block;
+      position: absolute;
+      bottom: clamp(1.5rem, 3.5vw, 2.5rem);
+      left: clamp(1.25rem, 3vw, 2.5rem);
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(13px, 1.4vw, 18px);
+      line-height: 1.25;
+      letter-spacing: var(--tracking-tight);
+      color: var(--ink);
+      z-index: 10;
+    }
+
+    .hl-stack {
+      display: flex;
+      position: absolute;
+      bottom: clamp(1.5rem, 3.5vw, 2.5rem);
+      right: clamp(1.25rem, 3vw, 2.5rem);
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 200px;
+      z-index: 10;
+    }
+    .hl-stack-item {
+      font-family: var(--font-mono);
+      font-size: clamp(9px, 1vw, 11px);
+      font-weight: 500;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink-2);
+    }
+
+    .hl-scroll-hint {
+      display: flex; /* restaurar: GSAP anima opacity */
+    }
   }
-  @media (max-width: 640px) {
-    .hl-meta { display: none; }
-  }
-  @media (max-width: 600px) {
-    .hl-meta, .hl-stack, .hl-tagline { display: none; }
+
+  /*
+   * ── DESKTOP (1024px+) ──
+   * Activa columna derecha (mark-col). GSAP mueve logo hacia ella
+   * calculando transX/transY desde el mark-placeholder.
+   */
+  @media (min-width: 1024px) {
+    .hero-logo .inner {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 64px;
+    }
+    .mark-col {
+      display: flex;
+      position: relative;
+      justify-content: center;
+    }
   }
 </style>

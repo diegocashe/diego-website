@@ -110,17 +110,19 @@
   const IDLE_DUR_MIN = 0.8;
   const IDLE_DUR_MAX = 1.2;
 
-  let stInstance:   ScrollTrigger | null = null;
-  let idleTween:    gsap.core.Animation | null = null;
-  let entryTween:   gsap.core.Tween    | null = null;
-  let idleActive    = false;
-  let resizeHandler: (() => void) | null = null;
+  let mm:            gsap.MatchMedia         | null = null;
+  let stInstance:    ScrollTrigger           | null = null;
+  let idleTween:     gsap.core.Animation     | null = null;
+  let entryTween:    gsap.core.Tween         | null = null;
+  let idleActive     = false;
+  let resizeHandler: (() => void)            | null = null;
 
   function cleanup() {
     idleActive = false;
-    idleTween?.kill();  idleTween  = null;
-    entryTween?.kill(); entryTween = null;
-    stInstance?.kill(); stInstance = null;
+    idleTween?.kill();   idleTween   = null;
+    entryTween?.kill();  entryTween  = null;
+    stInstance?.kill();  stInstance  = null;
+    mm?.revert();        mm          = null;
     if (resizeHandler) {
       window.removeEventListener("resize", resizeHandler);
       resizeHandler = null;
@@ -128,25 +130,28 @@
   }
 
   function init() {
-    const section   = document.querySelector<HTMLElement>(".hero-logo");
+    const section = document.querySelector<HTMLElement>(".hero-logo");
     if (!section) return;
-    const container = section.querySelector<HTMLElement>(".logo-container")!;
-    const textEl    = section.querySelector<HTMLElement>(".logo-text--dark")!;
-    const markGlow  = section.querySelector<HTMLElement>(".mark-glow")!;
+
+    const container      = section.querySelector<HTMLElement>(".logo-container")!;
+    const textEl         = section.querySelector<HTMLElement>(".logo-text--dark")!;
+    const markGlow       = section.querySelector<HTMLElement>(".mark-glow")!;
     const markPlaceholder = section.querySelector<HTMLElement>(".mark-placeholder");
-    const contentEls = section.querySelectorAll<HTMLElement>(".hl-content > *");
+    const contentEls     = section.querySelectorAll<HTMLElement>(".hl-content > *");
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
 
     function rootRem() {
       return parseFloat(getComputedStyle(document.documentElement).fontSize);
     }
     function measureFull() {
-      const r = textEl.getBoundingClientRect();
+      const r   = textEl.getBoundingClientRect();
       const pad = rootRem();
       return { w: r.width + pad * 2, h: r.height + pad * 2 };
     }
     function measureTarget() {
-      const r = textEl.getBoundingClientRect();
-      const pad = rootRem() * 4;
+      const r    = textEl.getBoundingClientRect();
+      const pad  = rootRem() * 4;
       const side = Math.max(r.width, r.height) + pad * 2;
       return { w: side, h: side };
     }
@@ -161,22 +166,21 @@
     }
     setVars(40, 40);
 
-    let full   = { w: 0, h: 0 };
-    let target = { w: 0, h: 0 };
-    let transX = 0, transY = 0;
+    // ── Idle animation (shared) ───────────────────────────────────────────────
 
     function runIdleCycle() {
       if (!idleActive) return;
-      const targetW  = full.w * (0.2 + Math.random() * 0.6);
-      const targetH  = full.h * (0.2 + Math.random() * 0.6);
+      const full    = measureFull();
+      const targetW = full.w * (0.2 + Math.random() * 0.6);
+      const targetH = full.h * (0.2 + Math.random() * 0.6);
       const targetOx = (Math.random() - 0.5) * full.w * 0.5;
       const targetOy = (Math.random() - 0.5) * full.h * 0.5;
       const dur      = IDLE_DUR_MIN + Math.random() * (IDLE_DUR_MAX - IDLE_DUR_MIN);
       idleTween = gsap.to(bgProxy, {
         w: targetW, h: targetH, ox: targetOx, oy: targetOy,
         duration: dur, ease: "sine.inOut",
-        onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
-        onComplete: runIdleCycle,
+        onUpdate()   { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+        onComplete:  runIdleCycle,
       });
     }
     function startIdle() {
@@ -187,127 +191,188 @@
     function stopIdle() {
       idleActive = false;
       idleTween?.kill();  idleTween  = null;
-      entryTween?.kill(); entryTween = null;  // evita que su onComplete llame startIdle
+      entryTween?.kill(); entryTween = null;
     }
 
-    function measureMark() {
-      if (!markPlaceholder || window.innerWidth <= 900 || !stInstance) {
-        transX = 0; transY = 0; return;
-      }
-      const mRect = markPlaceholder.getBoundingClientRect();
-      if (mRect.width === 0 || mRect.height === 0) { transX = 0; transY = 0; return; }
-      const cRect = container.getBoundingClientRect();
-      transX = (mRect.left + mRect.width  / 2) - (cRect.left + cRect.width  / 2);
-      transY = (mRect.top  + mRect.height / 2) - (cRect.top  + cRect.height / 2);
-    }
+    // ── GSAP matchMedia: bifurcar mobile / tablet+ ───────────────────────────
 
     gsap.set(container, { autoAlpha: 0 });
     gsap.set(contentEls, { autoAlpha: 0, y: 28 });
 
-    requestAnimationFrame(() => {
-      full   = measureFull();
-      target = measureTarget();
+    mm = gsap.matchMedia();
 
-      const uiEls = section.querySelectorAll<HTMLElement>(
-        ".hl-eyebrow, .hl-meta, .hl-tagline, .hl-stack, .hl-scroll-hint"
-      );
+    // ══════════════════════════════════════════════════════════════════════════
+    // MOBILE  (< 768px)
+    // Sin ScrollTrigger ni pin. Logo centrado arriba, contenido abajo.
+    // Entry animation simple → idle loop.
+    // ══════════════════════════════════════════════════════════════════════════
+    mm.add("(max-width: 767px)", () => {
+      // Decorativos visibles en mobile: solo eyebrow y scroll-hint (los demás están display:none via CSS)
+      const uiEls = section.querySelectorAll<HTMLElement>(".hl-eyebrow, .hl-scroll-hint");
+      gsap.set(uiEls, { autoAlpha: 0, y: 8 });
 
-      // bgProxy queda fuera del scrollTl — se anima desde el estado actual del idle
-      // para evitar saltos al iniciar el scroll.
-      let bgTween: gsap.core.Tween | null = null;
+      requestAnimationFrame(() => {
+        const full = measureFull();
 
-      const scrollTl = gsap.timeline()
-        .fromTo(container,
-          { scale: 1, x: 0, y: 0, rotateY: 0, rotateX: 0 },
-          {
-            scale: 0.38,
-            x: () => transX,
-            y: () => transY,
-            rotateY: -44,
-            rotateX: 16,
-            ease: "sine.inOut",
-            duration: 1,
-          }, 0
-        )
-        .to(contentEls,
-          { autoAlpha: 1, y: 0, stagger: 0.07, ease: "power2.out", duration: 0.55 },
-          0.45
-        );
-
-      stInstance = ScrollTrigger.create({
-        trigger: section,
-        start  : "top top",
-        end    : "+=120%",
-        pin    : true,
-        scrub  : 1.2,
-        animation: scrollTl,
-        onEnter() {
-          stopIdle();
-          gsap.to(uiEls, { autoAlpha: 0, y: -10, duration: 0.35, ease: "sine.in", overwrite: true });
-          // Partir del estado actual del proxy (donde quedó el idle)
-          bgTween?.kill();
-          bgTween = gsap.to(bgProxy, {
-            w: target.w, h: target.h, ox: 0, oy: 0,
-            duration: 0.6, ease: "sine.inOut",
-            onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
-          });
-        },
-        onLeave() {
-          gsap.to(markGlow, { opacity: 0.14, duration: 0.4 });
-        },
-        onLeaveBack() {
-          bgTween?.kill();
-          gsap.to(markGlow, { opacity: 0, duration: 0.3 });
-          gsap.set(container, { clearProps: "scale,x,y,rotateX,rotateY" });
-          gsap.to(uiEls, { autoAlpha: 1, y: 0, duration: 0.4, ease: "sine.out", overwrite: true });
-          gsap.set(contentEls, { autoAlpha: 0, y: 28 });
-          // Partir del estado actual hacia full, luego reanudar idle
-          bgTween = gsap.to(bgProxy, {
-            w: full.w, h: full.h, ox: 0, oy: 0,
-            duration: 0.5, ease: "sine.out",
-            onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
-            onComplete() { bgTween = null; startIdle(); },
-          });
-        },
-      });
-
-      measureMark();
-
-      const progress = stInstance.progress;
-
-      if (progress > 0) {
-        // Scroll ya pasó la sección (view transition + scroll rápido):
-        // aplicar estado final directamente sin entry animation ni idle.
-        stopIdle();
-        ScrollTrigger.refresh();
-      } else {
-        // Estado inicial normal: entry animation + idle
-        gsap.set(uiEls, { autoAlpha: 0, y: 8 });
         entryTween = gsap.to(bgProxy, {
           w: full.w, h: full.h,
           duration: 1.4, ease: "expo.out", delay: 0.1,
           onStart() {
             gsap.to(container, { autoAlpha: 1, duration: 0.3 });
-            gsap.to(uiEls, { autoAlpha: 1, y: 0, duration: 0.6, delay: 0.5, stagger: 0.07, ease: "sine.out" });
+            gsap.to(uiEls, { autoAlpha: 1, y: 0, duration: 0.5, delay: 0.3, ease: "sine.out" });
+            // Contenido aparece justo después del logo
+            gsap.to(contentEls, {
+              autoAlpha: 1, y: 0,
+              stagger: 0.07, duration: 0.5, delay: 0.5,
+              ease: "power2.out",
+            });
           },
-          onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+          onUpdate()  { setVars(bgProxy.w, bgProxy.h); },
           onComplete() {
             entryTween = null;
             startIdle();
           },
         });
+      });
+
+      // Teardown cuando matchMedia cambia (ej. resize a tablet)
+      return () => {
+        stopIdle();
+        gsap.set(contentEls, { clearProps: "all" });
+      };
+    });
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // TABLET + DESKTOP  (≥ 768px)
+    // ScrollTrigger con pin. Logo se desplaza al mark-placeholder en desktop
+    // (transX/transY = 0 en tablet porque mark-col sigue oculto hasta 1024px).
+    // ══════════════════════════════════════════════════════════════════════════
+    mm.add("(min-width: 768px)", () => {
+      let full   = { w: 0, h: 0 };
+      let target = { w: 0, h: 0 };
+      let transX = 0, transY = 0;
+
+      function measureMark() {
+        // Solo calculamos offset cuando la columna derecha es visible (≥ 1024px)
+        if (!markPlaceholder || window.innerWidth < 1024 || !stInstance) {
+          transX = 0; transY = 0; return;
+        }
+        const mRect = markPlaceholder.getBoundingClientRect();
+        if (mRect.width === 0 || mRect.height === 0) { transX = 0; transY = 0; return; }
+        const cRect = container.getBoundingClientRect();
+        transX = (mRect.left + mRect.width  / 2) - (cRect.left + cRect.width  / 2);
+        transY = (mRect.top  + mRect.height / 2) - (cRect.top  + cRect.height / 2);
       }
 
-      resizeHandler = () => {
+      const uiEls = section.querySelectorAll<HTMLElement>(
+        ".hl-eyebrow, .hl-meta, .hl-tagline, .hl-stack, .hl-scroll-hint"
+      );
+
+      let bgTween: gsap.core.Tween | null = null;
+
+      requestAnimationFrame(() => {
         full   = measureFull();
         target = measureTarget();
-        ScrollTrigger.refresh();
+
+        const scrollTl = gsap.timeline()
+          .fromTo(container,
+            { scale: 1, x: 0, y: 0, rotateY: 0, rotateX: 0 },
+            {
+              scale: 0.38,
+              x: () => transX,
+              y: () => transY,
+              rotateY: -44,
+              rotateX: 16,
+              ease: "sine.inOut",
+              duration: 1,
+            }, 0
+          )
+          .to(contentEls,
+            { autoAlpha: 1, y: 0, stagger: 0.07, ease: "power2.out", duration: 0.55 },
+            0.45
+          );
+
+        stInstance = ScrollTrigger.create({
+          trigger:   section,
+          start:     "top top",
+          end:       "+=120%",
+          pin:       true,
+          scrub:     1.2,
+          animation: scrollTl,
+          onEnter() {
+            stopIdle();
+            gsap.to(uiEls, { autoAlpha: 0, y: -10, duration: 0.35, ease: "sine.in", overwrite: true });
+            bgTween?.kill();
+            bgTween = gsap.to(bgProxy, {
+              w: target.w, h: target.h, ox: 0, oy: 0,
+              duration: 0.6, ease: "sine.inOut",
+              onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+            });
+          },
+          onLeave() {
+            gsap.to(markGlow, { opacity: 0.14, duration: 0.4 });
+          },
+          onLeaveBack() {
+            bgTween?.kill();
+            gsap.to(markGlow, { opacity: 0, duration: 0.3 });
+            gsap.set(container, { clearProps: "scale,x,y,rotateX,rotateY" });
+            gsap.to(uiEls, { autoAlpha: 1, y: 0, duration: 0.4, ease: "sine.out", overwrite: true });
+            gsap.set(contentEls, { autoAlpha: 0, y: 28 });
+            bgTween = gsap.to(bgProxy, {
+              w: full.w, h: full.h, ox: 0, oy: 0,
+              duration: 0.5, ease: "sine.out",
+              onUpdate() { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+              onComplete() { bgTween = null; startIdle(); },
+            });
+          },
+        });
+
         measureMark();
+
+        if (stInstance.progress > 0) {
+          // View transition + scroll rápido: aplicar estado final directo
+          stopIdle();
+          ScrollTrigger.refresh();
+        } else {
+          gsap.set(uiEls, { autoAlpha: 0, y: 8 });
+          entryTween = gsap.to(bgProxy, {
+            w: full.w, h: full.h,
+            duration: 1.4, ease: "expo.out", delay: 0.1,
+            onStart() {
+              gsap.to(container, { autoAlpha: 1, duration: 0.3 });
+              gsap.to(uiEls, {
+                autoAlpha: 1, y: 0,
+                duration: 0.6, delay: 0.5, stagger: 0.07, ease: "sine.out",
+              });
+            },
+            onUpdate()  { setVars(bgProxy.w, bgProxy.h, bgProxy.ox, bgProxy.oy); },
+            onComplete() { entryTween = null; startIdle(); },
+          });
+        }
+
+        resizeHandler = () => {
+          full   = measureFull();
+          target = measureTarget();
+          ScrollTrigger.refresh();
+          measureMark();
+        };
+        window.addEventListener("resize", resizeHandler, { passive: true });
+      });
+
+      // Teardown cuando matchMedia cambia (ej. resize a mobile)
+      return () => {
+        stopIdle();
+        stInstance?.kill(); stInstance = null;
+        if (resizeHandler) {
+          window.removeEventListener("resize", resizeHandler);
+          resizeHandler = null;
+        }
+        gsap.set(container, { clearProps: "all" });
+        gsap.set(contentEls, { autoAlpha: 0, y: 28 });
       };
-      window.addEventListener("resize", resizeHandler, { passive: true });
     });
   }
 
   document.addEventListener("astro:before-swap", cleanup);
-  document.addEventListener("astro:page-load", init);
+  document.addEventListener("astro:page-load",   init);
 </script>

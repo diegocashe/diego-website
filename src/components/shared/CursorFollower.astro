@@ -32,6 +32,7 @@
 
   function initMagnetic() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(hover: none)').matches) return;
 
     const els = document.querySelectorAll<HTMLElement>(MAGNETIC_SEL);
 

@@ -32,7 +32,7 @@ import Button from '../ds/atoms/Button.astro';
 <style>
   .contact {
     background: var(--ink);
-    padding: 96px 40px;
+    padding: 64px 20px;
     text-align: center;
   }
   .inner {
@@ -73,7 +73,7 @@ import Button from '../ds/atoms/Button.astro';
   h2 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(32px, 5vw, 52px);
+    font-size: clamp(28px, 7vw, 52px);
     letter-spacing: var(--tracking-tight);
     color: #fff;
     line-height: var(--leading-display);
@@ -91,16 +91,17 @@ import Button from '../ds/atoms/Button.astro';
   /* ── CTAs ── */
   .ctas {
     display: flex;
+    flex-direction: column;
     gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+    align-items: center;
+    width: 100%;
     margin-top: 8px;
   }
   .mail-link {
     color: inherit;
     text-decoration: none;
   }
-  /* ghost button on dark background */
+
   :global(.ghost-light) {
     color: rgba(255,255,255,0.65) !important;
   }
@@ -109,7 +110,14 @@ import Button from '../ds/atoms/Button.astro';
     color: #fff !important;
   }
 
-  @media (max-width: 640px) {
-    .contact { padding: 72px 24px; }
+  /* ── Tablet ── */
+  @media (min-width: 768px) {
+    .contact { padding: 96px 40px; }
+    .ctas {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: auto;
+    }
   }
 </style>

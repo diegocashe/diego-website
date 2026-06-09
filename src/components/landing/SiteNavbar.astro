@@ -15,18 +15,75 @@ import { navLinks } from '../../data/site';
       <div class="wm inline" style="font-size:18px;">diego castillo<span class="dot">.</span></div>
     </a>
 
-    <nav aria-label="Principal">
+    <!-- Desktop nav -->
+    <nav id="main-nav" aria-label="Principal">
       {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
 
-    <Button variant="ink" size="sm">
-      <a href="/#contacto" class="cta-link">Hablemos</a>
-    </Button>
+    <div class="nav-cta">
+      <Button variant="ink" size="sm">
+        <a href="/#contacto" class="cta-link">Hablemos</a>
+      </Button>
+    </div>
+
+    <!-- Hamburger: solo mobile -->
+    <button
+      class="nav-toggle"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-overlay"
+    >
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+    </button>
   </div>
 </header>
 
+<!--
+  Overlay fullscreen para mobile.
+  z-index: 98 → queda detrás del header (100), que sigue visible arriba.
+  La animación es fade + leve translateY para evitar el salto brusco.
+-->
+<div
+  class="mobile-overlay"
+  id="mobile-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menú de navegación"
+  aria-hidden="true"
+>
+  <nav class="overlay-nav" aria-label="Principal">
+    {navLinks.map((l, i) => (
+      <a
+        href={l.href}
+        class="overlay-link"
+        style={`--i:${i}`}
+        tabindex="-1"
+      >
+        {l.label}
+        <span class="overlay-link-arrow" aria-hidden="true">↗</span>
+      </a>
+    ))}
+  </nav>
+
+  <footer class="overlay-footer">
+    <a href="/#contacto" class="overlay-cta" tabindex="-1">
+      Hablemos →
+    </a>
+    <span class="overlay-available">
+      <span class="dot-ok"></span>
+      Disponible para proyectos
+    </span>
+  </footer>
+</div>
+
 <style>
+  /* ─────────────────────────────────────────────
+   * NAVBAR (shared mobile + desktop)
+   * ───────────────────────────────────────────── */
   .navbar {
+    position: sticky;
     top: 0;
     z-index: 100;
     background: rgba(255, 255, 255, 0.88);
@@ -34,18 +91,18 @@ import { navLinks } from '../../data/site';
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
   }
+
   .inner {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 0 20px;
     height: 64px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 32px;
+    gap: 16px;
   }
 
-  /* ── Brand chip ── */
+  /* ── Brand ── */
   .logo-chip {
     display: inline-flex;
     align-items: center;
@@ -68,28 +125,264 @@ import { navLinks } from '../../data/site';
   }
   .brand-tile .wm { line-height: 0.94; }
 
-  /* ── Nav links ── */
-  nav {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-  }
-  nav a {
+  /* ── Desktop nav: oculto en mobile ── */
+  nav#main-nav { display: none; }
+  nav#main-nav a {
     font-size: 13.5px;
     font-weight: 700;
     color: var(--ink-2);
     text-decoration: none;
     transition: color 0.15s;
   }
-  nav a:hover { color: var(--ink); }
+  nav#main-nav a:hover { color: var(--ink); }
 
-  /* link inside button */
-  .cta-link {
-    color: inherit;
-    text-decoration: none;
+  .nav-cta  { display: none; }
+  .cta-link { color: inherit; text-decoration: none; }
+
+  /* ── Hamburger ── */
+  .nav-toggle {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex: none;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .nav-toggle:hover { background: rgba(0,0,0,0.04); }
+
+  .bar {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--ink);
+    border-radius: 2px;
+    transform-origin: center;
+    transition: transform 0.25s ease, opacity 0.25s ease, width 0.25s ease;
   }
 
-  @media (max-width: 640px) {
-    nav { display: none; }
+  /* Hamburger → X */
+  .nav-toggle[aria-expanded="true"] .bar-1 {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  .nav-toggle[aria-expanded="true"] .bar-2 {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .nav-toggle[aria-expanded="true"] .bar-3 {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  /* ─────────────────────────────────────────────
+   * MOBILE OVERLAY
+   * ───────────────────────────────────────────── */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 98;                /* detrás del navbar (100) */
+    background: var(--ink, #0d1117);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 96px 32px 52px;   /* top deja espacio al navbar */
+
+    /* Estado cerrado */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    transition:
+      opacity  0.3s ease,
+      transform 0.3s ease,
+      visibility 0s linear 0.3s;
+  }
+
+  .mobile-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity  0.3s ease,
+      transform 0.3s ease,
+      visibility 0s linear 0s;
+  }
+
+  /* ── Links ── */
+  .overlay-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .overlay-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 9vw, 3rem);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    min-height: 64px;
+    transition: color 0.2s ease;
+
+    /* Stagger de entrada */
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      color 0.2s ease,
+      opacity 0.35s ease calc(var(--i) * 60ms + 80ms),
+      transform 0.35s ease calc(var(--i) * 60ms + 80ms);
+  }
+  .overlay-link:last-child { border-bottom: none; }
+  .overlay-link:hover      { color: #fff; }
+
+  .mobile-overlay.open .overlay-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .overlay-link-arrow {
+    font-size: 0.55em;
+    opacity: 0.3;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .overlay-link:hover .overlay-link-arrow {
+    opacity: 0.8;
+    transform: translate(3px, -3px);
+  }
+
+  /* ── Footer del overlay ── */
+  .overlay-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.35s ease 0.35s,
+      transform 0.35s ease 0.35s;
+  }
+  .mobile-overlay.open .overlay-footer {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .overlay-cta {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    background: var(--blue, #3b82f6);
+    padding: 14px 28px;
+    border-radius: 12px;
+    width: fit-content;
+    transition: opacity 0.2s;
+  }
+  .overlay-cta:hover { opacity: 0.85; }
+
+  .overlay-available {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .dot-ok {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok, #1f8a5b);
+    flex: none;
+    animation: dot-pulse 2s infinite;
+  }
+  @keyframes dot-pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(31,138,91,0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(31,138,91,0);   }
+    100% { box-shadow: 0 0 0 0   rgba(31,138,91,0);   }
+  }
+
+  /* ─────────────────────────────────────────────
+   * TABLET + DESKTOP (768px+)
+   * ───────────────────────────────────────────── */
+  @media (min-width: 768px) {
+    .inner       { padding: 0 40px; gap: 32px; }
+    .nav-toggle  { display: none; }
+
+    nav#main-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .nav-cta { display: block; }
+
+    /* El overlay nunca se muestra en desktop */
+    .mobile-overlay { display: none !important; }
   }
 </style>
+
+<script>
+  function initNav() {
+    const toggleEl  = document.querySelector<HTMLButtonElement>('.nav-toggle');
+    const overlayEl = document.getElementById('mobile-overlay');
+    if (!toggleEl || !overlayEl) return;
+
+    // Reasignar a const non-null para que TS los estreche dentro de closures
+    const toggle: HTMLButtonElement = toggleEl;
+    const overlay: HTMLElement      = overlayEl;
+
+    function openMenu() {
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      overlay.querySelectorAll<HTMLElement>('[tabindex="-1"]').forEach(el => el.removeAttribute('tabindex'));
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      overlay.querySelectorAll<HTMLElement>('a').forEach(el => el.setAttribute('tabindex', '-1'));
+      document.body.style.overflow = '';
+    }
+
+    toggle.addEventListener('click', () => {
+      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      isOpen ? closeMenu() : openMenu();
+    });
+
+    overlay.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') closeMenu();
+    });
+  }
+
+  initNav();
+  document.addEventListener('astro:after-swap', initNav);
+</script>

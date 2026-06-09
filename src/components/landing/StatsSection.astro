@@ -23,13 +23,13 @@ const stats = [
   .stats {
     background: var(--bg);
     border-bottom: 1px solid var(--line);
-    padding: 40px;
+    padding: 24px 20px;
   }
   .inner {
     max-width: 1180px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr;
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -38,7 +38,7 @@ const stats = [
   }
   .tile {
     background: var(--bg);
-    padding: 28px 24px;
+    padding: 24px 20px;
   }
   .k {
     font-family: var(--font-mono);
@@ -63,11 +63,16 @@ const stats = [
     margin-top: 6px;
   }
 
-  @media (max-width: 700px) {
+  /* ── Tablet ── */
+  @media (min-width: 600px) {
     .inner { grid-template-columns: repeat(2, 1fr); }
     .stats { padding: 32px 24px; }
   }
-  @media (max-width: 400px) {
-    .inner { grid-template-columns: 1fr; }
+
+  /* ── Desktop ── */
+  @media (min-width: 1024px) {
+    .inner { grid-template-columns: repeat(4, 1fr); }
+    .stats { padding: 40px; }
+    .tile  { padding: 28px 24px; }
   }
 </style>
