@@ -30,14 +30,14 @@ import { skills, experience, education, publications } from '../data/cv';
       </div>
 
       <div class="contact-card">
-        <div class="contact-label">Contacto</div>
+        <div class="contact-label">Contact</div>
         <ul class="contact-list">
           <li><span class="ci">@</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><span class="ci">☎</span><span>{site.phone}</span></li>
           <li><span class="ci">⌖</span><span>{site.location}</span></li>
           <li>
             <span class="ci">in</span>
-            <a href={site.linkedin} target="_blank" rel="noopener">
+            <a href={site.linkedin} target="_blank" rel="noopener noreferrer">
               linkedin.com/in/diegocashe
             </a>
           </li>
@@ -46,7 +46,7 @@ import { skills, experience, education, publications } from '../data/cv';
           <span class="lang-pill">🇪🇸 Spanish — Native</span>
           <span class="lang-pill">🇺🇸 English — Intermediate</span>
         </div>
-        <button class="download-btn" id="print-btn">↓ Download PDF</button>
+        <a href="/Diego_Castillo_CV.pdf" download="Diego_Castillo_CV.pdf" class="download-btn">↓ Download PDF</a>
       </div>
     </div>
   </header>
@@ -110,7 +110,7 @@ import { skills, experience, education, publications } from '../data/cv';
           </div>
           <div class="hl-card achievement">
             <div class="hl-label">Achievement</div>
-            <div class="award-badge">🥉 3rd Place</div>
+            <div class="award-badge">🥈 2nd Place</div>
             <p class="hl-text">
               <strong>Maracaibo Innova</strong> — Pioneered an AI-driven NLP predictive
               sales and management software.
@@ -228,6 +228,7 @@ import { skills, experience, education, publications } from '../data/cv';
   .download-btn {
     appearance: none;
     border: none;
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -320,5 +321,4 @@ import { skills, experience, education, publications } from '../data/cv';
 
 <script>
   import '../scripts/glitch';
-  document.getElementById('print-btn')?.addEventListener('click', () => window.print());
 </script>

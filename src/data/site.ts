@@ -1,13 +1,10 @@
 export const site = {
   name:        'Diego Castillo',
   role:        'Lead Frontend & Full-Stack Developer',
-  email:       'diegocashe17@gmail.com',
+  email:       'hello@diegocashe.dev',
   phone:       '+58 414 363 5330',
   location:    'Venezuela',
-  linkedin:    'https://www.linkedin.com/in/diegocashe',
-  github:      'https://github.com/diegocastillo',
-  twitter:     'https://twitter.com/diegocastillo',
-  twitterHandle: '@diegocashe',
+  linkedin:    'https://www.linkedin.com/in/diegocashe/?locale=en-US',
   domain:      'diegocastillo.dev',
 } as const;
 
@@ -29,7 +26,5 @@ export const navLinks = [
 ] as const;
 
 export const socialLinks = [
-  { label: 'GitHub',   href: site.github   },
   { label: 'LinkedIn', href: site.linkedin },
-  { label: 'Twitter',  href: site.twitter  },
 ] as const;

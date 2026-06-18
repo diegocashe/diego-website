@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import SiteNavbar from '../components/landing/SiteNavbar.astro';
 import SiteFooter from '../components/landing/SiteFooter.astro';
+
+const showProjects = import.meta.env.PUBLIC_FEATURE_PROJECTS === 'true';
 ---
 
 <Layout
@@ -41,9 +43,11 @@ import SiteFooter from '../components/landing/SiteFooter.astro';
           <a href="/" class="btn btn-ink btn-lg">
             Ir al inicio <span class="arr">→</span>
           </a>
-          <a href="/projects" class="btn btn-out btn-lg">
-            Ver proyectos
-          </a>
+          {showProjects && (
+            <a href="/projects" class="btn btn-out btn-lg">
+              Ver proyectos
+            </a>
+          )}
         </div>
 
         <div class="nf-tags" aria-hidden="true">

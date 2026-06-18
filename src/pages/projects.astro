@@ -6,6 +6,8 @@ import PageHero    from '../components/shared/PageHero.astro';
 import ProjectCard from '../components/projects/ProjectCard.astro';
 import { projects, categories } from '../data/projects';
 
+if (import.meta.env.PUBLIC_FEATURE_PROJECTS !== 'true') return Astro.redirect('/', 302);
+
 const stats = [
   { value: '9+',  label: 'proyectos destacados' },
   { value: '7+',  label: 'años de experiencia'  },

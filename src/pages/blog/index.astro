@@ -6,6 +6,8 @@ import SiteFooter from '../../components/landing/SiteFooter.astro';
 import PostCard   from '../../components/blog/PostCard.astro';
 import PageHero   from '../../components/shared/PageHero.astro';
 
+if (import.meta.env.PUBLIC_FEATURE_BLOG !== 'true') return Astro.redirect('/', 302);
+
 const allPosts = await getCollection('blog');
 const posts = allPosts
   .filter(({ data }) => !data.draft)

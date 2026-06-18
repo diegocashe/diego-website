@@ -1,6 +1,15 @@
 ---
 import Button from '../ds/atoms/Button.astro';
 import { navLinks } from '../../data/site';
+
+const showProjects = import.meta.env.PUBLIC_FEATURE_PROJECTS === 'true';
+const showBlog     = import.meta.env.PUBLIC_FEATURE_BLOG === 'true';
+
+const visibleLinks = navLinks.filter((l) => {
+  if (l.href === '/projects') return showProjects;
+  if (l.href === '/blog')     return showBlog;
+  return true;
+});
 ---
 
 <header class="navbar">
@@ -16,7 +25,7 @@ import { navLinks } from '../../data/site';
 
     <!-- Desktop nav -->
     <nav id="main-nav" aria-label="Principal">
-      {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+      {visibleLinks.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
 
     <div class="nav-cta">
@@ -53,7 +62,7 @@ import { navLinks } from '../../data/site';
   aria-hidden="true"
 >
   <nav class="overlay-nav" aria-label="Principal">
-    {navLinks.map((l, i) => (
+    {visibleLinks.map((l, i) => (
       <a
         href={l.href}
         class="overlay-link"

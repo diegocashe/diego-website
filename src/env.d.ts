@@ -7,6 +7,12 @@ declare namespace App {
   }
 }
 
+interface ImportMetaEnv {
+  readonly PUBLIC_FEATURE_PROJECTS: string;
+  readonly PUBLIC_FEATURE_BLOG: string;
+  readonly PUBLIC_FEATURE_STATS: string;
+}
+
 interface ImportMeta {
   readonly env: ImportMetaEnv;
   readonly dirname: string;

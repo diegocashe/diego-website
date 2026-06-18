@@ -6,6 +6,9 @@ import StatsSection   from '../components/landing/StatsSection.astro';
 import ProjectsSection from '../components/landing/ProjectsSection.astro';
 import ContactCTA     from '../components/landing/ContactCTA.astro';
 import SiteFooter     from '../components/landing/SiteFooter.astro';
+
+const showProjects = import.meta.env.PUBLIC_FEATURE_PROJECTS === 'true';
+const showStats    = import.meta.env.PUBLIC_FEATURE_STATS === 'true';
 ---
 
 <Layout
@@ -15,8 +18,8 @@ import SiteFooter     from '../components/landing/SiteFooter.astro';
   <SiteNavbar />
   <main id="main-content">
     <HeroSection />
-    <StatsSection />
-    <ProjectsSection />
+    {showStats    && <StatsSection />}
+    {showProjects && <ProjectsSection />}
     <ContactCTA />
   </main>
   <SiteFooter />

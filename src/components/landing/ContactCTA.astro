@@ -1,5 +1,6 @@
 ---
 import Button from '../ds/atoms/Button.astro';
+import { site } from '../../data/site';
 ---
 
 <section class="contact" id="contacto">
@@ -20,11 +21,15 @@ import Button from '../ds/atoms/Button.astro';
 
     <div class="ctas">
       <Button variant="blue" size="lg">
-        <a href="mailto:hola@diegocastillo.dev" class="mail-link">
-          hola@diegocastillo.dev
+        <a href="mailto:hello@diegocashe.dev" class="mail-link">
+          hello@diegocashe.dev
         </a>
       </Button>
-      <Button variant="ghost" size="lg" class="ghost-light">Ver LinkedIn →</Button>
+      <Button variant="ghost" size="lg" class="ghost-light">
+        <a href={site.linkedin} target="_blank" rel="noopener noreferrer" class="mail-link">
+          Ver LinkedIn →
+        </a>
+      </Button>
     </div>
   </div>
 </section>

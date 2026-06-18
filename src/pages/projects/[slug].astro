@@ -5,6 +5,7 @@ import SiteFooter  from '../../components/landing/SiteFooter.astro';
 import { projects } from '../../data/projects';
 
 export function getStaticPaths() {
+  if (import.meta.env.PUBLIC_FEATURE_PROJECTS !== 'true') return [];
   return projects.map((p) => ({
     params: { slug: p.slug },
     props:  { project: p },
