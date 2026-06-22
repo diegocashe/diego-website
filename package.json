@@ -2,8 +2,9 @@
   "name": "diegocastillo-websile",
   "type": "module",
   "version": "0.0.2",
+  "packageManager": "pnpm@11.4.0",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "prepare": "husky",
