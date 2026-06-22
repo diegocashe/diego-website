@@ -4,6 +4,30 @@ Guía completa de qué hacer y qué evitar en cada etapa del ciclo de desarrollo
 
 ---
 
+## Setup inicial (solo la primera vez en una máquina nueva)
+
+Husky necesita saber dónde está `node` antes de correr cualquier hook. Crear este archivo una sola vez:
+
+```bash
+mkdir -p ~/.config/husky
+cat > ~/.config/husky/init.sh << 'EOF'
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+EOF
+```
+
+Este archivo **no se commitea** — es configuración local de la máquina. Husky v9 lo carga automáticamente antes de ejecutar cualquier hook. Sin él, los commits serán bloqueados con `node: command not found`.
+
+Luego activar Husky en el repo:
+
+```bash
+pnpm install
+pnpm prepare
+```
+
+---
+
 ## Antes de empezar a trabajar
 
 **Siempre** sincronizar `main` antes de comenzar cualquier cambio:
