@@ -5,6 +5,7 @@ export const site = {
   phone:       '+58 414 363 5330',
   location:    'Venezuela',
   linkedin:    'https://www.linkedin.com/in/diegocashe/?locale=en-US',
+  github:      'https://github.com/diegocashe',
   domain:      'diegocastillo.dev',
 } as const;
 

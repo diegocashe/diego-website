@@ -63,7 +63,7 @@ const personSchema = {
   jobTitle:      site.role,
   url:           seo.siteUrl,
   email:         site.email,
-  sameAs: [site.linkedin, site.github, site.twitter],
+  sameAs: [site.linkedin, site.github],
 };
 
 const webSiteSchema = {
@@ -121,8 +121,8 @@ const articleSchema = ogType === 'article' && pubDate ? {
 
     <!-- ── Twitter / X Card ── -->
     <meta name="twitter:card"        content="summary_large_image" />
-    <meta name="twitter:site"        content={site.twitterHandle} />
-    <meta name="twitter:creator"     content={site.twitterHandle} />
+    <meta name="twitter:site"        content="" />
+    <meta name="twitter:creator"     content="" />
     <meta name="twitter:title"       content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image"       content={ogImageAbsolute} />
