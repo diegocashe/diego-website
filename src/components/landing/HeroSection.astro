@@ -1,6 +1,7 @@
 ---
-import Button from "../ds/atoms/Button.astro";
 import HeroLogo from "./HeroLogo.astro";
+
+const showProjects = import.meta.env.PUBLIC_FEATURE_PROJECTS === 'true';
 ---
 
 <section class="hero-logo">
@@ -63,8 +64,12 @@ import HeroLogo from "./HeroLogo.astro";
         Disponible para proyectos freelance.
       </p>
       <div class="ctas">
-        <Button variant="ink" size="lg">Ver proyectos <span class="arr">→</span></Button>
-        <Button variant="out" size="lg">Descargar CV</Button>
+        {
+          showProjects && (
+            <a class="btn ink" href="/projects">Ver proyectos <span class="arr">→</span></a>
+          )
+        }
+        <a class="btn btn-ink" href="/cv">Descargar CV</a>
       </div>
       <div class="stack-tags">
         <span class="tag">React</span>
@@ -125,6 +130,7 @@ import HeroLogo from "./HeroLogo.astro";
 
   /* ── Inner: llena el espacio restante → contenido verticalmente centrado ── */
   .hero-logo .inner {
+    z-index: 10;              /* encima del logo-stage en stacking order */
     order: 2;
     flex: 1;                  /* ocupa el espacio que sobra */
     display: flex;

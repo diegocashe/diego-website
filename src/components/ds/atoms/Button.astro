@@ -52,7 +52,7 @@ const cls = [
 
 <button class={cls} disabled={disabled} style={style}><slot /></button>
 
-<style>
+<style lang="css" is:global>
   .btn {
     appearance: none;
     border: 1px solid transparent;
@@ -69,6 +69,7 @@ const cls = [
     transition: 0.15s ease;
     line-height: 1;
     white-space: nowrap;
+    text-decoration: none;
   }
   .btn:active { transform: translateY(1px); }
   .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
