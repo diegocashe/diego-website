@@ -15,6 +15,7 @@
  */
 
 import { defineMiddleware } from 'astro:middleware';
+import type { MiddlewareHandler } from 'astro';
 
 // ── Nonce generation ──────────────────────────────────────────────────────
 // Uses the global Web Crypto API (crypto.getRandomValues) — available in
@@ -107,24 +108,25 @@ function applySecurityHeaders(headers: Headers, nonce: string): void {
 
 // ── Middleware entry point ────────────────────────────────────────────────
 
-export const onRequest = defineMiddleware(async (context, next) => {
-  const nonce = generateNonce();
-  context.locals.nonce = nonce;
+export const onRequest: MiddlewareHandler = defineMiddleware(
+  async (context, next) => {
+    const nonce = generateNonce();
+    context.locals.nonce = nonce;
 
-  const response = await next();
+    const response = await next();
 
-  // Skip security headers in dev — strict-dynamic CSP blocks Vite HMR
-  // and unbundled module scripts that don't carry a nonce
-  if (import.meta.env.DEV) {
-    return response;
-  }
+    // Skip security headers in dev — strict-dynamic CSP blocks Vite HMR
+    // and unbundled module scripts that don't carry a nonce
+    if (import.meta.env.DEV) {
+      return response;
+    }
 
-  const newHeaders = new Headers(response.headers);
-  applySecurityHeaders(newHeaders, nonce);
+    const newHeaders = new Headers(response.headers);
+    applySecurityHeaders(newHeaders, nonce);
 
-  return new Response(response.body, {
-    status:     response.status,
-    statusText: response.statusText,
-    headers:    newHeaders,
-  });
+    return new Response(response.body, {
+      status:     response.status,
+      statusText: response.statusText,
+      headers:    newHeaders,
+    });
 });
