@@ -3,7 +3,7 @@
 const GLITCH_CHARS = "!@#$%&*?X0123456789ABCDEFGHIJKLMNOPQRST";
 
 function scramble(el: HTMLElement, duration = 0.55): void {
-  const original = el.textContent ?? "";
+  const original = el.textContent;
   const len = original.length;
   const totalFrames = Math.round(duration * 60);
   let frame = 0;
@@ -29,7 +29,7 @@ function scramble(el: HTMLElement, duration = 0.55): void {
 }
 
 function glitchFlash(el: HTMLElement): void {
-  const original = el.textContent ?? "";
+  const original = el.textContent;
   el.textContent = original
     .split("")
     .map((c) =>
