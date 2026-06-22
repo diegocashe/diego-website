@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/diegocashe/diego-website/compare/v1.0.0...v1.0.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* add astro check to pre-commit hook and validate script ([52ecd08](https://github.com/diegocashe/diego-website/commit/52ecd08e64d3f6fe89ca047a546cf593583904d0))
+
 # 1.0.0 (2026-06-22)
 
 
