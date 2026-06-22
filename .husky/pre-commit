@@ -3,4 +3,8 @@ export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
-commitlint --edit "$1"
+echo "Running lint..."
+pnpm lint || exit 1
+
+echo "Running typecheck..."
+pnpm typecheck || exit 1
