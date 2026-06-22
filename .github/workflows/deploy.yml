@@ -29,6 +29,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Debug environment
+        run: |
+          node -v
+          pnpm -v
+          pnpm exec tsc -v
+          pnpm exec astro --version
+          pwd
+
       - name: Lint
         run: pnpm lint
 
