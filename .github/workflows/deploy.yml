@@ -29,6 +29,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Debug ESLint config
+        run: pnpm exec eslint --print-config src/middleware.ts
+
+      - name: Astro check
+        run: pnpm exec astro check
+
       - name: Debug environment
         run: |
           node -v
