@@ -8,3 +8,6 @@ pnpm lint || exit 1
 
 echo "Running typecheck..."
 pnpm typecheck || exit 1
+
+echo "Running astro check..."
+pnpm astro check || exit 1

@@ -14,7 +14,8 @@
     "astro": "astro",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate": "pnpm lint && pnpm typecheck && astro check"
   },
   "dependencies": {
     "astro": "^6.4.4",
