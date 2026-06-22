@@ -1,0 +1,160 @@
+name: CI / CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # ── Corre en cada push a main ─────────────────────────────────────────────
+  ci:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  # ── Solo corre si CI pasa ─────────────────────────────────────────────────
+  release:
+    name: Release & Deploy
+    runs-on: ubuntu-latest
+    needs: ci
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Release
+        id: semantic
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy via rsync over SSH
+        id: deploy
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: Burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -avzr --delete --exclude='.htaccess' --exclude='.well-known/'
+          path: dist/
+          remote_path: /home/diegocas/public_html/
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: 22
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Notify Discord — deploy exitoso
+        if: steps.semantic.outputs.new_release_published == 'true' && success()
+        run: |
+          curl -s -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "Despliegue exitoso",
+                "color": 3066993,
+                "fields": [
+                  {
+                    "name": "Version",
+                    "value": "v${{ steps.semantic.outputs.new_release_version }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Rama",
+                    "value": "`${{ github.ref_name }}`",
+                    "inline": true
+                  },
+                  {
+                    "name": "Commit",
+                    "value": "[`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})",
+                    "inline": false
+                  },
+                  {
+                    "name": "Release",
+                    "value": "[${{ github.repository }}/releases/tag/v${{ steps.semantic.outputs.new_release_version }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.semantic.outputs.new_release_version }})",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "GitHub Actions • ${{ github.workflow }}"
+                },
+                "timestamp": "${{ github.event.head_commit.timestamp }}"
+              }]
+            }'
+
+      - name: Notify Discord — fallo en el pipeline
+        if: failure()
+        run: |
+          curl -s -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "Error en el pipeline",
+                "description": "El workflow fallo antes de completar el despliegue.",
+                "color": 15158332,
+                "fields": [
+                  {
+                    "name": "Rama",
+                    "value": "`${{ github.ref_name }}`",
+                    "inline": true
+                  },
+                  {
+                    "name": "Ejecutado por",
+                    "value": "${{ github.actor }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "Ver logs",
+                    "value": "[${{ github.workflow }} #${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
+                    "inline": false
+                  }
+                ],
+                "footer": {
+                  "text": "GitHub Actions • ${{ github.workflow }}"
+                },
+                "timestamp": "${{ github.event.head_commit.timestamp }}"
+              }]
+            }'
