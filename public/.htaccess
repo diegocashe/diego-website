@@ -17,10 +17,11 @@
 <IfModule mod_headers.c>
 
     # Content-Security-Policy
-    # script-src strict-dynamic: trusts scripts loaded by Astro's bundled entry
-    # point without listing every hash manually.
+    # script-src 'self' 'unsafe-inline': static site has no nonce mechanism so
+    # strict-dynamic cannot be used. 'self' covers /_astro/*.js bundles;
+    # 'unsafe-inline' covers inline scripts injected by ClientRouter and components.
     # style-src unsafe-inline: required for Google Fonts injected <style> tag.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'strict-dynamic'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
 
     # Force HTTPS for 1 year — remove preload if domain isn't on the preload list yet
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
