@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/diegocashe/diego-website/compare/v1.0.2...v1.0.3) (2026-06-23)
+
+
+### Bug Fixes
+
+* refine deployment workflow by adjusting debug steps & enhancing Discord notification verbosity ([a33dd70](https://github.com/diegocashe/diego-website/commit/a33dd703b16f9896ecd33f56b0b76d9bb5517d3a))
+
 ## [1.0.2](https://github.com/diegocashe/diego-website/compare/v1.0.1...v1.0.2) (2026-06-23)
 
 
