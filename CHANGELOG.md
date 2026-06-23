@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/diegocashe/diego-website/compare/v1.0.5...v1.0.6) (2026-06-23)
+
+
+### Bug Fixes
+
+* update version number in index.astro to 1.0.6 ([b363481](https://github.com/diegocashe/diego-website/commit/b3634818c0d82c223cb8f9e72092a837d5d3e4dd))
+
 ## [1.0.5](https://github.com/diegocashe/diego-website/compare/v1.0.4...v1.0.5) (2026-06-23)
 
 
