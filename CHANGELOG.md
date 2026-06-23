@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/diegocashe/diego-website/compare/v1.0.3...v1.0.4) (2026-06-23)
+
+
+### Bug Fixes
+
+* replace semantic-release command with action for improved release process ([0854391](https://github.com/diegocashe/diego-website/commit/08543912abfc210f0ddf4439ab34c7fe0dcbc800))
+
 ## [1.0.3](https://github.com/diegocashe/diego-website/compare/v1.0.2...v1.0.3) (2026-06-23)
 
 
