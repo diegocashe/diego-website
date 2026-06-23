@@ -29,12 +29,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Debug ESLint config
-        run: pnpm exec eslint --print-config src/middleware.ts
-
-      - name: Astro check
-        run: pnpm exec astro check
-
+        
       - name: Debug environment
         run: |
           node -v
@@ -42,6 +37,9 @@ jobs:
           pnpm exec tsc -v
           pnpm exec astro --version
           pwd
+        
+      - name: Astro check
+        run: pnpm exec astro check
 
       - name: Lint
         run: pnpm lint
@@ -104,7 +102,7 @@ jobs:
       - name: Notify Discord — deploy exitoso
         if: steps.semantic.outputs.new_release_published == 'true' && success()
         run: |
-          curl -s -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+          curl -fv -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
             -d '{
               "embeds": [{
@@ -142,7 +140,7 @@ jobs:
       - name: Notify Discord — fallo en el pipeline
         if: failure()
         run: |
-          curl -s -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
+          curl -fv -X POST "${{ secrets.DISCORD_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
             -d '{
               "embeds": [{
