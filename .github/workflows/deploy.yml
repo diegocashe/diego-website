@@ -82,7 +82,7 @@ jobs:
 
       - name: Release
         id: semantic
-        run: pnpm exec semantic-release
+        uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
