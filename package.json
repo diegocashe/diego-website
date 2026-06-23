@@ -1,7 +1,7 @@
 {
   "name": "diegocastillo-websile",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "packageManager": "pnpm@11.4.0",
   "engines": {
     "node": ">=24.0.0"
