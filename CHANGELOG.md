@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/diegocashe/diego-website/compare/v1.0.4...v1.0.5) (2026-06-23)
+
+
+### Bug Fixes
+
+* standardize Node.js setup and ensure newline at end of file in configuration ([c28bdd9](https://github.com/diegocashe/diego-website/commit/c28bdd97d192cef5bb5f7fb81df2d820067db43e))
+
 ## [1.0.4](https://github.com/diegocashe/diego-website/compare/v1.0.3...v1.0.4) (2026-06-23)
 
 
